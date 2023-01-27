@@ -29,7 +29,6 @@ public class Life implements Colours {
         Actions actions = new Actions();
         MADD madd = new MADD();
         int j = 0;
-
         int k = 0;
         do{
             try{

@@ -1,5 +1,7 @@
 James's highest number of moves achieved: 9
 
+K's highest number of moves achieved: 8
+
 Skimpo Blimpo 2's highest number of moves achieved: 8
 
 Joikl's highest number of moves achieved: 61

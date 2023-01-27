@@ -133,6 +133,7 @@ class HighScores implements Colours {
 }
 
 
+
     public static Map<String, String> HashMapFromTextFile() {
 
         Map<String, String> map = new HashMap<>(); //TODO why turn integers into strings???????????????????
