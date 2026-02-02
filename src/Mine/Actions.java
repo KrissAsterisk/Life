@@ -79,7 +79,10 @@ class Actions implements Colours{
                return (addL);
             }
 
-        } else { //done fight loss message; put all strings into an array, split them into words, replace them in the array and randomize each array block to be printed.
+        } else if(statusCheck() < 0){
+            return -999999999;
+        }
+        else { //done fight loss message; put all strings into an array, split them into words, replace them in the array and randomize each array block to be printed.
             String[] loss_msg = new String[15];
             String loss1 = " unfortunately you were outnumbered and barely managed to get away . ";
             loss_msg[0] = loss1;

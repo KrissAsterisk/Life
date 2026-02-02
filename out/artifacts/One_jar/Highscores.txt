@@ -1,1 +1,3 @@
-Asterisk's highest number of moves achieved: 50
+Asterisk's highest number of moves achieved: 17
+Asterisk's highest number of moves achieved: 11
+1's highest number of moves achieved: 13
