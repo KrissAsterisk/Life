@@ -78,8 +78,7 @@ class Actions implements Colours{
                madd.clearBG();
                return (addL);
             }
-        } else if (statusCheck() < 0){
-            return -999999999;
+
         } else { //done fight loss message; put all strings into an array, split them into words, replace them in the array and randomize each array block to be printed.
             String[] loss_msg = new String[15];
             String loss1 = " unfortunately you were outnumbered and barely managed to get away . ";
@@ -117,10 +116,12 @@ class Actions implements Colours{
 
             StringBuilder sb = new StringBuilder();
             for (String s : loss_msg) {
-                sb.append(s);
+
+                sb.append(s.toLowerCase());
             }
-            String str = sb.toString();
-            String[] funnyHaha = str.split("\\s+");
+
+            String[] funnyHaha = sb.toString().split("\\s+");
+
 
             funnyHaha = Arrays.stream(funnyHaha).distinct().toArray(String[]::new);
             // for (String s : funnyHaha) { // fixed null spam error - due to too many empty blocks assigned to the initial array
@@ -136,15 +137,21 @@ class Actions implements Colours{
             }
 
             madd.printR();
-            madd.printHIGH();
-            int o = (int) (Math.random() * 10);
-            for(int i = 0; i < o; i++){
-                int p = (int) (Math.random() * funnyHaha.length);
-                funnyHaha[p] = funnyHaha[p].replaceAll("[^\\w]", "");
-                out.print((funnyHaha[i])); // or any random number ig
-                out.print(" ");
-            }
+            madd.printHIGH(); // Ivan
+            int o = (int) (Math.random() * funnyHaha.length/5); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
+            for(int i = 0; i < o; i++){ // o is the new "array length"
+                funnyHaha[i] = funnyHaha[i].replaceAll("[^\\w]", ""); // remove all non-word chars aka . ! /  ...
 
+                if( i == 0 ){
+                    out.print(funnyHaha[i] = funnyHaha[i].replaceFirst(funnyHaha[i].substring(0,1), funnyHaha[i].toUpperCase().substring(0,1))); // this looks great :)
+                    // the above is so that the 1st letter is always Upper
+                } else {
+                    out.print((funnyHaha[i])); // or any random number ig
+                }
+                if(i != o - 1 )
+                    out.print(" ");
+            } // end sentences with .
+            out.print("."); // set with !, ?, !! enums with rand
 
 
             madd.clearBG();
