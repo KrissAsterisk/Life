@@ -54,12 +54,12 @@ public class Life {
                         actions.showChoices(l, 0);
                         actions.getpName(pName);
                         for (int i = 1; i <= l; i++) {
-                            int x = reader.nextInt();
-                            if (x > 6 || x < 1) {
+                            int moveChoice = reader.nextInt();
+                            if (moveChoice > 6 || moveChoice < 1) {
                                 out.println("Choose a number between 0 and 7. You lose a move every time you type otherwise.");
                                 i--;
                                 l--; // don't count for final score.
-                            } else switch (x){
+                            } else switch (moveChoice){
                                 case FIGHT -> {
                                     l+=actions.fightTEST();
                                     if(l < 0){ continue; }

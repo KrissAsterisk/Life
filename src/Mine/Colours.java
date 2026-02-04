@@ -42,38 +42,7 @@ sealed interface Colours permits MADD { // actually this is package access abstr
         out.print(AnsiCodes.ANSI_RESET.code);
     } // just in case :)
 
-    void inheritMe();
-    void rngC();
-    void rngCConst();
-
-    default void defaultOption(){
-        thisIsAMethod();
-
-    }
-
-    private void thisIsAMethod(){
-        out.println(iCanBeCalledAnywhereHere());
-        out.println(butSoCanI());
-    }
-
-
-    private static boolean iCanBeCalledAnywhereHere(){
-        return true;
-    }
-
-    private boolean butSoCanI(){
-        return true;
-    }
-
-    @SuppressWarnings("all")
-    private static boolean canIAccessYou() throws RuntimeException{
-        try {
-            //butSoCanI(); -- cannot access non-static
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
+    void rngC(int duration);
 
 
 }

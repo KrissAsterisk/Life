@@ -48,3 +48,4 @@ ast's highest number of moves achieved: 42
 ast's highest number of moves achieved: 1
 Ast's highest number of moves achieved: 1
 1's highest number of moves achieved: 4
+Ast's highest number of moves achieved: 5

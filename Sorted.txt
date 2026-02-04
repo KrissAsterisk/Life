@@ -16,6 +16,8 @@ POli's highest number of moves achieved: 57
 
 Asti's highest number of moves achieved: 50
 
+Ast's highest number of moves achieved: 5
+
 Asteirks's highest number of moves achieved: 49
 
 1's highest number of moves achieved: 4
@@ -25,8 +27,6 @@ Yuijk's highest number of moves achieved: 17
 ASt's highest number of moves achieved: 1
 
 ast's highest number of moves achieved: 1
-
-Ast's highest number of moves achieved: 1
 
 Asterisk's highest number of moves achieved: 1
 
