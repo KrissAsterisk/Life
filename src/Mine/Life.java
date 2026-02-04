@@ -3,14 +3,16 @@ package Mine;
 
 import java.io.IOException;
 import java.util.*;
+import static Mine.Colours.AnsiCodes.*;
 
 import static java.lang.System.*;
 import static java.lang.Thread.sleep;
 
 
-public class Life implements Colours {
+public class Life {
     public String pName;
-    public final MADD madd = new MADD();  //TODO keep for fun later on ;)
+
+    //public final MADD madd = new MADD();  //TODO keep for fun later on ;) - replaced with interface static methods 2/3/26
 
     Life(String pName) {
         this.pName = pName;
@@ -24,10 +26,10 @@ public class Life implements Colours {
 
 
 
-
     public static void main(String[] args) throws NoSuchElementException, IOException {
         Actions actions = new Actions();
-        MADD madd = new MADD();
+        Colours.clear(); // initialize enum
+        //MADD Colours = new MADD();
         int j = 0;
         int k = 0;
         do{
@@ -36,6 +38,7 @@ public class Life implements Colours {
                     int temp = 0;
                     int checkInt;
                     Scanner reader = new Scanner(in);
+                        //out.println(Colours.AnsiCodes.ANSI_RESET);
                         out.println("Player1, your name: ");//TODO nuttin persunel kid
                         String pName = reader.nextLine();
                         Life player1 = new Life(pName);
@@ -102,7 +105,7 @@ public class Life implements Colours {
                         actions.showChoices(l, i);
                         if (l - i == 5) {
 
-                            out.printf("%s%s+----------------------+%s\n%s%s|      %s %s%sWARNING!%s %s      |%s\n%s%s|You have 5 moves left!|%s\n%s%s+----------------------+%s%n", ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RESET, ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RED_BACKGROUND, ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RED_BACKGROUND, ANSI_BLACK_BACKGROUND, ANSI_RESET, ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RESET, ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RESET);
+                            out.printf("%s%s+----------------------+%s\n%s%s|      %s %s%sWARNING!%s %s      |%s\n%s%s|You have 5 moves left!|%s\n%s%s+----------------------+%s%n", Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW.colourCode(), ANSI_RESET.colourCode(), Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW.colourCode(), Colours.ANSI_RED_BACKGROUND, Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW.colourCode(), Colours.ANSI_RED_BACKGROUND, Colours.ANSI_BLACK_BACKGROUND, ANSI_RESET.colourCode(), Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW.colourCode(), ANSI_RESET.colourCode(), Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW.colourCode(), ANSI_RESET.colourCode());
 
                             /*try {
                                 sleep(2000);
@@ -119,10 +122,10 @@ public class Life implements Colours {
                         temp ++;
 
                     }
-                    madd.printHIGH();
-                    madd.printR();
+                    ANSI_HIGH_INTENSITY.printCode();
+                    ANSI_RED.printCode();
                     out.println("You died! Game over!");
-                    madd.clearBG();
+                    Colours.clear();
                     out.println("In total you've had " + temp + " moves!");
                     HighScores highScores = new HighScores();
                     highScores.filePrintHS(player1, temp);
@@ -130,15 +133,15 @@ public class Life implements Colours {
                     reader.close();
                     System.exit(0);
                 } catch (InputMismatchException e) {
-                madd.printR();
+                ANSI_RED.printCode();
                 if (j <= 5) {
                     out.println("Please input a number and nothing else.");
-                        madd.clearBG();
+                        Colours.clear();
                         j++;
 
                     } else {
                     out.println("Refrain from spamming non-integers.");
-                        madd.clearBG();
+                        Colours.clear();
                         exit(-2);
                     }
                 }

@@ -6,32 +6,22 @@ import java.util.Random;
 
 import static java.lang.System.*;
 
-class MADD implements Colours {
+final class MADD implements Colours {
 
-    void printR() {
-        out.print(ANSI_RED);
-    }
-    void printC(){
-        out.print(ANSI_CYAN);
-    }
-    void printY(){
-        out.print(ANSI_YELLOW);
-    }
-    void printG(){
-        out.print(ANSI_GREEN);
-    }
-    void printHIGH(){
-        out.print(HIGH_INTENSITY);
-    }
-    void printLOW(){
-        out.print(LOW_INTENSITY);
-    }
-    void clearBG() {
-        out.println(ANSI_RESET);
+
+
+    public void defaultOption(){ // overridden default option
+        out.println("not anymore");
     }
 
-    void rngC() {
+    public void inheritMe(){
+        out.println("I'm forced :(");
+    }
+
+
+    public void rngC() {
         Random rand = new Random();
+        defaultOption();
         String[] array = new String[8];
         array[0] = ANSI_BLACK_BACKGROUND;
         array[1] = ANSI_WHITE_BACKGROUND;
@@ -46,10 +36,10 @@ class MADD implements Colours {
             if (j < 0) j++;
             out.println(array[j]+"\n");
         }
-        out.println(ANSI_RESET);
+        Colours.clear();
 
     }
-    void rngCConst(){
+    public void rngCConst(){
         Random rand = new Random();
         String[] array = new String[8];
         array[0] = ANSI_BLACK_BACKGROUND;
@@ -65,7 +55,7 @@ class MADD implements Colours {
             if (j < 0) j++;
             out.println(array[j]+"\n");
         }
-        out.println(ANSI_RESET);
+        Colours.clear();
 
     }
 }

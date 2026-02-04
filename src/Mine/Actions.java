@@ -2,21 +2,17 @@ package Mine;
 
 
 
-
-
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
-
-
+import static Mine.Colours.AnsiCodes.*;
 
 import static java.lang.System.*;
 //@SuppressWarnings("")
-class Actions implements Colours{
+class Actions{
 
-    private final MADD madd = new MADD();
+    //private final MADD Colours = new MADD();
     public double foodP = 100.00, waterP = 100.00, energyP = 100.00, healthP = 100.00;
     private String pName;
+
 
     void showChoices(int l, int i){
         out.printf("\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", l - i);
@@ -72,10 +68,10 @@ class Actions implements Colours{
                return -999999999;
            }  else {
                 int addL = (int) (Math.random() * (15 - 5) + 5);
-               madd.printR();
-               madd.printHIGH();
+               ANSI_RED.printCode();
+               ANSI_HIGH_INTENSITY.printCode();
                 out.println("You have gained " + addL + " moves for destroying your foe in battle!");
-               madd.clearBG();
+               Colours.clear();
                return (addL);
             }
 
@@ -139,8 +135,8 @@ class Actions implements Colours{
                 funnyHaha[i] = temp;
             }
 
-            madd.printR();
-            madd.printHIGH(); // Ivan
+            ANSI_RED.printCode();
+            ANSI_HIGH_INTENSITY.printCode();
             int o = (int) (Math.random() * funnyHaha.length/5); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
             for(int i = 0; i < o; i++){ // o is the new "array length"
                 funnyHaha[i] = funnyHaha[i].replaceAll("[^\\w]", ""); // remove all non-word chars aka . ! /  ...
@@ -157,15 +153,16 @@ class Actions implements Colours{
             out.print("."); // set with !, ?, !! enums with rand
 
 
-            madd.clearBG();
+            Colours.clear();
             return 0;
         }
     }
 
     void statusReportTEST() {
-        madd.printHIGH();
+        ANSI_HIGH_INTENSITY.printCode();
         out.println(pName + "'s current state:");
-        out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f\n%s\n", ANSI_RED, healthP, ANSI_YELLOW, energyP, ANSI_CYAN, waterP, ANSI_GREEN,foodP, ANSI_RESET);
+        out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f", ANSI_RED.colourCode(), healthP, ANSI_YELLOW.colourCode(), energyP, ANSI_CYAN.colourCode(), waterP, ANSI_GREEN.colourCode(),foodP);
+        Colours.clear();
         //madd.rngC(); //TODO turn on for some random colors every time you press 5 lol
         statusCheck();
 
@@ -174,13 +171,16 @@ class Actions implements Colours{
 
         double meanWarning = ((foodP+waterP+energyP+healthP)/4);
         if (energyP < -10 || waterP < -10 || foodP < -10 || healthP < -10){
-            madd.printHIGH();
+            ANSI_HIGH_INTENSITY.printCode();
+
             out.println(pName + "'s current state:");
-            out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f\n%s", ANSI_RED, healthP, ANSI_YELLOW, energyP, ANSI_CYAN, waterP, ANSI_GREEN,foodP, ANSI_RESET);
+            out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f\n%s", ANSI_RED.colourCode(), healthP, ANSI_YELLOW.colourCode(), energyP, ANSI_CYAN.colourCode(), waterP, ANSI_GREEN.colourCode(),foodP, ANSI_RESET.colourCode());
+            Colours.clear();
             return -999999999;
         }else
         if(meanWarning < 50.00 && meanWarning > -10.00){
-            out.printf("%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!", ANSI_RED, HIGH_INTENSITY, ANSI_RESET);
+            out.printf("%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!", ANSI_RED.colourCode(), ANSI_HIGH_INTENSITY.colourCode(), ANSI_RESET.colourCode());
+            Colours.clear();
 
             return 0;
         }else return 21;
@@ -209,9 +209,9 @@ class Actions implements Colours{
         } else if (b.equalsIgnoreCase("n")) {
             return 1;
         } else {
-            madd.printR();
+            ANSI_RED.printCode();
             out.println("Please input only 1 character. (Y/N)");
-            madd.clearBG();
+            Colours.clear();
             endGameTEST();
         }
         return 1;

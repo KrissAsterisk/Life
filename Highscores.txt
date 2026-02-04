@@ -32,3 +32,8 @@ Ast's highest number of moves achieved: 2
 Ast's highest number of moves achieved: 2
 Ast's highest number of moves achieved: 6
 Ast's highest number of moves achieved: 1
+Asterisk's highest number of moves achieved: 3
+Asterisk's highest number of moves achieved: 1
+Ast's highest number of moves achieved: 29
+Ast's highest number of moves achieved: 2
+ast's highest number of moves achieved: 1

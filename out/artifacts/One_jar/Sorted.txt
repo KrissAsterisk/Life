@@ -1,0 +1,4 @@
+1's highest number of moves achieved: 13
+
+Asterisk's highest number of moves achieved: 11
+

@@ -1,17 +1,10 @@
 package Mine;
 
 
-
-
-import javax.print.DocFlavor;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.RunnableScheduledFuture;
-import java.util.stream.Collectors;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -23,7 +16,7 @@ import static Mine.Life.main;
 import static java.lang.System.*;
 
 
-class HighScores implements Colours {
+class HighScores {
 
     final static String filePath = "Highscores.txt";
     final static String outputFilePath = "Sorted.txt";
@@ -162,7 +155,7 @@ class HighScores implements Colours {
 
                     // put name, number in HashMap if they are
                     // not empty
-                    if (!name.equals("") && !number.equals("")) {
+                    if (!name.isEmpty() && !number.isEmpty()) {
                         map.put(name, number);
 
                 }
@@ -177,7 +170,7 @@ class HighScores implements Colours {
 
 
     void retryGame() throws IOException {
-        MADD madd = new MADD();
+        //MADD Colours = new MADD();
 
         Scanner checker = new Scanner(in);
         String ch = checker.next();
@@ -188,9 +181,9 @@ class HighScores implements Colours {
             out.println("See ya!");
             exit(0);
         } else {
-            madd.printR();
+            Colours.AnsiCodes.ANSI_RED.printCode();
             out.println("Please type in only 1 character: Y or N");
-            madd.clearBG();
+            Colours.clear();
             retryGame();
         }
     }
