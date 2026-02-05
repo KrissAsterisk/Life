@@ -7,16 +7,16 @@ import static Mine.Colours.AnsiCodes.*;
 
 import static java.lang.System.*;
 //@SuppressWarnings("")
-class Actions {
+class Actions { // G O D  C L A S S
+    // TODO IDEA: make this into an abstract class. split eat, food etc into children of it that override a "do()" method
 
-    //private final MADD Colours = new MADD();
-    protected double foodP = 100.00, waterP = 100.00, energyP = 100.00, healthP = 100.00;
+    private double foodP = 100.00, waterP = 100.00, energyP = 100.00, healthP = 100.00;
     private String pName;
 
 
     public static void showChoices(int movesLeft, int totalMoves) {
-        out.printf("\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
-    }
+        out.printf(ANSI_LOW_INTENSITY.colourCode() + ANSI_BLUE.colourCode() + "\nIt's time to choose:"+ ANSI_RESET.colourCode() +"\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
+    } // put into an interface?
 
 
     int eatFood() {
@@ -161,7 +161,6 @@ class Actions {
         out.println(pName + "'s current state:");
         out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f", ANSI_RED.colourCode(), healthP, ANSI_YELLOW.colourCode(), energyP, ANSI_CYAN.colourCode(), waterP, ANSI_GREEN.colourCode(), foodP);
         Colours.clear();
-        //madd.rngC(); // turn on for some random colors every time you press 5 lol
         statusCheck();
 
     }
@@ -186,18 +185,12 @@ class Actions {
     }
 
 
-    String pNameChange() {
-        Scanner nameChange = new Scanner(in);
-        out.print("Input your new name: ");
-        return nameChange.nextLine();
+
+    void getpName(String defName) { // remove this - i do not want anyone being able to even copy the name, only read it.
+        this.pName = defName;
     }
 
-    void getpName(String defName) {
-        pName = defName;
-    }
-
-    int endGame() { //fixed score is not registered on the file if quit, or changed names.
-        Scanner check = new Scanner(in);
+    int endGame(Scanner check) {
         out.println("You've chosen to quit the game. Are you sure? (Y/N)");
         String b = check.next();
         if (b.equalsIgnoreCase("y")) {
@@ -209,7 +202,7 @@ class Actions {
             ANSI_RED.printCode();
             out.println("Please input only 1 character. (Y/N)");
             Colours.clear();
-            endGame(); // recursive
+            endGame(check); // recursive
         }
         return 1; // TODO:replace with boolean
     }

@@ -21,7 +21,7 @@ class HighScores {
     final static String filePath = "Highscores.txt";
     final static String outputFilePath = "Sorted.txt";
 
-    void filePrintHS(String name, int temp) throws IOException {
+    void filePrintHS(String name, int temp, Scanner reader) throws IOException {
 
         File highS = new File("Highscores.txt");
         if (!highS.exists()) {
@@ -121,7 +121,7 @@ class HighScores {
     //-------------------------------------------
         out.println("Wanna try again? Y / N");
 
-    retryGame();
+    retryGame(reader);
 
 }
 
@@ -169,13 +169,12 @@ class HighScores {
     }
 
 
-    void retryGame() throws IOException {
+    void retryGame(Scanner checker) throws IOException {
         //MADD Colours = new MADD();
 
-        Scanner checker = new Scanner(in);
         String ch = checker.next();
         if(ch.equalsIgnoreCase("y")){
-            main(null);
+            Life.startGame(checker);
         }
         else if(ch.equalsIgnoreCase("n")) {
             out.println("See ya!");
@@ -184,7 +183,7 @@ class HighScores {
             Colours.AnsiCodes.ANSI_RED.printCode();
             out.println("Please type in only 1 character: Y or N");
             Colours.clear();
-            retryGame();
+            retryGame(checker);
         }
     }
 }
