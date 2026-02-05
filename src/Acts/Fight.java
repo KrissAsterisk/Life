@@ -1,54 +1,19 @@
-package Mine;
+package Acts;
 
+import Mine.Colours;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
-import java.util.*;
-import static Mine.Colours.AnsiCodes.*;
+import static Mine.Colours.AnsiCodes.ANSI_HIGH_INTENSITY;
+import static Mine.Colours.AnsiCodes.ANSI_RED;
+import static java.lang.System.out;
 
-import static java.lang.System.*;
-//@SuppressWarnings("")
-class Actions { // G O D  C L A S S
-    // TODO IDEA: make this into an abstract class. split eat, food etc into children of it that override a "do()" method
+public final class Fight extends Actions {
 
-    private double foodP = 100.00, waterP = 100.00, energyP = 100.00, healthP = 100.00;
-    private String pName;
-
-
-    public static void showChoices(int movesLeft, int totalMoves) {
-        out.printf(ANSI_LOW_INTENSITY.colourCode() + ANSI_BLUE.colourCode() + "\nIt's time to choose:"+ ANSI_RESET.colourCode() +"\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
-    } // put into an interface?
-
-
-    int eatFood() {
-        healthP += (Math.random() * 8.6) + 3.1;
-        energyP -= (Math.random() * 8.3) + 7.8;
-        waterP += (Math.random() * 5.3) + 1;
-        foodP += (Math.random() * 15.5) + 25.5;
-
-        return statusCheck();
-    }
-
-
-    int drinkWater() {
-        healthP += (Math.random() * 3.9) + 2.1;
-        energyP -= (Math.random() * 11.27) + 5.23;
-        waterP += (Math.random() * 26.757) + 14.543;
-        foodP += (Math.random() * 3.7) + 0.5;
-        return statusCheck();
-    }
-
-
-    int sleep() {
-
-
-        energyP += (Math.random() * 26.4) + 15.2;
-        healthP += (Math.random() * 23.21) + 8.51; // 0 -> 23.21 => at least 8.51 health points
-        foodP -= (Math.random() * 21.3) + 30.5;
-        waterP -= (Math.random() * 21.7) + 35.6;
-        return statusCheck();
-    }
-
-    int fight() {
+    public int act(Scanner reader){
         ArrayList<Integer> luck = new ArrayList<>();
         for (int i = 1; i <= 100; i++) { // create 100 random numbers between 1 and 2501
             luck.add((int) (Math.random() * (2500)) + 1);
@@ -66,7 +31,7 @@ class Actions { // G O D  C L A S S
         int winThreshold = 1215;
         if (fin < winThreshold) { // if sum is below threshold, player wins
 
-            if (statusCheck() < 0) { //  check if player died before adding moves
+            if (super.act(reader) < 0) { //  check if player died before adding moves
                 return -999999999;
             } else {
                 int addMoves = (int) (Math.random() * 10) + 5; // at least 5 moves
@@ -77,10 +42,10 @@ class Actions { // G O D  C L A S S
                 return (addMoves);
             }
 
-        } else if (statusCheck() < 0) { // if dead, exit program, otherwise print funny message
+        } else if (super.act(reader) < 0) { // if dead, exit program, otherwise print funny message
             return -999999999;
         } else { //done fight loss message; put all strings into an array, split them into words, replace them in the array and randomize each array block to be printed.
-            String[] loss_msg = new String[16]; //TODO: API calls to AI to generate sentences?
+            String[] loss_msg = new String[16]; //TODO: API calls to AI to generate sentences? also can we not DO THIS???
             String loss1 = " unfortunately you were outnumbered and barely managed to get away . ";
             loss_msg[0] = loss1;
             String loss2 = " you tried to fight a dragon barehanded and got your teeth knocked out . ";
@@ -154,56 +119,5 @@ class Actions { // G O D  C L A S S
             Colours.clear();
             return 0;
         }
-    }
-
-    void statusReport() { // reduce boilerplate
-        ANSI_HIGH_INTENSITY.printCode();
-        out.println(pName + "'s current state:");
-        out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f", ANSI_RED.colourCode(), healthP, ANSI_YELLOW.colourCode(), energyP, ANSI_CYAN.colourCode(), waterP, ANSI_GREEN.colourCode(), foodP);
-        Colours.clear();
-        statusCheck();
-
-    }
-
-    int statusCheck() {
-
-        double meanWarning = ((foodP + waterP + energyP + healthP) / 4);
-        if (energyP < -10 || waterP < -10 || foodP < -10 || healthP < -10) {
-            ANSI_HIGH_INTENSITY.printCode();
-
-            out.println(pName + "'s current state:");
-            out.printf("%sHP: %f\n%sEP: %f\n%sWP: %f\n%sFP: %f\n%s", ANSI_RED.colourCode(), healthP, ANSI_YELLOW.colourCode(), energyP, ANSI_CYAN.colourCode(), waterP, ANSI_GREEN.colourCode(), foodP, ANSI_RESET.colourCode());
-            Colours.clear();
-            return -999999999; // doing this makes it harder to read and understand the code, would be better to perhaps call a function to "kill" the player instead of exiting the for loop like this
-        } else if (meanWarning < 50.00 && meanWarning > -10.00) {
-            out.printf("%n%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!", ANSI_RED.colourCode(), ANSI_HIGH_INTENSITY.colourCode(), ANSI_RESET.colourCode());
-            Colours.clear();
-
-            return 0;
-        } else return 21; // 21 the funny number; no code uses >0 return value YET
-
-    }
-
-
-
-    void getpName(String defName) { // remove this - i do not want anyone being able to even copy the name, only read it.
-        this.pName = defName;
-    }
-
-    int endGame(Scanner check) {
-        out.println("You've chosen to quit the game. Are you sure? (Y/N)");
-        String b = check.next();
-        if (b.equalsIgnoreCase("y")) {
-            out.println("Goodbye!");
-            return 0;
-        } else if (b.equalsIgnoreCase("n")) {
-            return 1;
-        } else {
-            ANSI_RED.printCode();
-            out.println("Please input only 1 character. (Y/N)");
-            Colours.clear();
-            endGame(check); // recursive
-        }
-        return 1; // TODO:replace with boolean
     }
 }

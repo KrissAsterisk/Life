@@ -2,7 +2,7 @@ package Mine;
 
 import static java.lang.System.out;
 
-sealed interface Colours permits MADD { // actually this is package access abstract
+public sealed interface Colours permits MADD { // actually this is package access abstract
     String ANSI_BLACK = "\u001B[30m";
     String ANSI_BLUE = "\u001B[34m";
     String ANSI_PURPLE = "\u001B[35m";

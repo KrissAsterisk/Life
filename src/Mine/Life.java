@@ -1,7 +1,7 @@
 package Mine;
 
+import Acts.*;
 
-import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import static Mine.Colours.AnsiCodes.*;
@@ -14,14 +14,15 @@ import static java.lang.Thread.sleep;
 public class Life {
     private static final int  FIGHT = 1, SLEEP = 2, DRINK = 3, EAT = 4, CONDITION = 5, QUIT = 6;
     private static final int STARTING_MOVES = 50;
+    private static final double DEFAULT_FOOD_POINTS = 100.0, DEFAULT_WATER_POINTS = 100.0, DEFAULT_ENERGY_POINTS = 100.0, DEFAULT_HEALTH_POINTS = 100.0;
 
-    final record Player(String name, Scanner reader){
+    record Player(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP){
         Player { // compact constructor!!
             if (name.equals("Asterisk")) {
                 ANSI_RED.printCode(); ANSI_HIGH_INTENSITY.printCode();
                 out.println("The name " + name + " is reserved.");
                 Colours.clear();
-                startGame(reader);
+                main(); // to refresh var player1 in case reserved name is used; I don't think this is good
             }
             else {
                 out.println(ANSI_GREEN.colourCode()+ "Welcome to the game, " + ANSI_YELLOW.colourCode() + name + ANSI_GREEN.colourCode() + "!"); // welcome the player anytime they "sign in"
@@ -35,7 +36,7 @@ public class Life {
         out.println("\nWould you like to change your name?");
         if (reader.nextLine().replaceAll(" ", "").toLowerCase().contains("yes")) {
             out.println("Input your new name: ");
-            new Player(reader.nextLine(), reader); // create the record name anew, keeping it immutable
+            new Player(reader.nextLine(), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS); // create the record name anew, keeping it immutable
             Colours.clear();
         } else {
             out.println(ANSI_RED.colourCode() + "Name locked in.\n");
@@ -43,19 +44,19 @@ public class Life {
         }
     }
 
-    static String startGame(Scanner reader){
+    static Player startGame(Scanner reader){
         out.println("Player1, your name: ");
-        var player1 = new Player(reader.nextLine(), reader);
-        return player1.name();
+        return new Player(reader.nextLine(), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS);
     }
 
-    public static void main(String[] args) throws NoSuchElementException, IOException {
-        Actions actions = new Actions();
+    public static void main() throws NoSuchElementException {
+
         Colours.clear(); // initialize enum
         MADD madd = new MADD();
         int playerState, finalMoves = 0, movesLeft = STARTING_MOVES, misinputCounter = 0;
         var reader = new Scanner(in);
-        actions.getpName(startGame(reader)); // game starts here - maybe pass the name onto actions' methods?
+        var player1 = startGame(reader);
+        new Actions(player1.name(), player1.foodP(), player1.waterP(), player1.energyP(), player1.healthP());
         Actions.showChoices(STARTING_MOVES, 0);
         var choice = 0;
         var gameStartTime = Instant.now();
@@ -69,36 +70,37 @@ public class Life {
                 }
                 else switch (choice) {
                     case FIGHT -> {
-                        movesLeft += actions.fight();
+                        movesLeft +=  new Fight().act(reader);
                         if (movesLeft < 0) {
                             continue;
                         }
                     }
                     case SLEEP -> {
-                        if ((playerState = actions.sleep()) < 0) {
+                        if ((playerState = new Sleep().act(reader)) < 0) {
                             movesLeft = playerState; // runs status check which on top of giving current stats, check if you're dead TODO: run the "death check" on a separate thread at all times
                             continue;
                         }
                     }
                     case DRINK -> {
-                        if ((playerState = actions.drinkWater()) < 0) {
+                        if ((playerState = new Drink().act(reader)) < 0) {
                             movesLeft = playerState;
                             continue; // runs the for loop condition again, in case the player died, to exit it by setting available moves to a non positive int
                         }
                     }
                     case EAT -> {
-                        if ((playerState = actions.eatFood()) < 0) {
+                        if ((playerState = new Eat().act(reader)) < 0) {
                             movesLeft = playerState;
                             continue;
                         }
                     }
                     case CONDITION -> {
-                        actions.statusReport();
+                        //actions.statusReport();
+                        new Status().act(reader);
                         totalMoves--;
                         movesLeft--; // don't count towards the final score but still uses a move
                     }
                     case QUIT -> {
-                        if ((actions.endGame(reader)) == 1) { // needs to be in catch block
+                        if ((new Quit().act(reader)) == 1) { // needs to be in catch block
                             totalMoves--; // dont count towards total moves
                             Actions.showChoices(movesLeft, totalMoves);
                         } else {
@@ -151,7 +153,7 @@ public class Life {
         out.println("In total you've had " + finalMoves + " moves!");
         var gameOverTime = Instant.now();
         out.println("You lasted: " + ANSI_HIGH_INTENSITY.colourCode() + (ChronoUnit.MINUTES.between(gameStartTime, gameOverTime)) + " minutes and " + (ChronoUnit.SECONDS.between(gameStartTime, gameOverTime)) +" seconds.");
-        HighScores highScores = new HighScores();
+        //HighScores highScores = new HighScores();
         Colours.clear();
         //highScores.filePrintHS(player1.name(), temp); TODO:fix the sorting
         reader.close();
