@@ -7,7 +7,7 @@ sealed interface Colours permits MADD { // actually this is package access abstr
     String ANSI_BLUE = "\u001B[34m";
     String ANSI_PURPLE = "\u001B[35m";
     String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    String ANSI_BLACK_BACKGROUND = "\u001B[40m";
     String ANSI_RED_BACKGROUND = "\u001B[41m";
     String ANSI_GREEN_BACKGROUND = "\u001B[42m";
     String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
@@ -17,7 +17,7 @@ sealed interface Colours permits MADD { // actually this is package access abstr
     String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     // used in formatted strings
-    public static enum AnsiCodes{
+    enum AnsiCodes{
         ANSI_RESET("\u001B[0m"){}, //
         ANSI_BLUE("\u001B[34m"), ANSI_RED("\u001B[31m"), ANSI_GREEN("\u001B[32m"), ANSI_YELLOW("\u001B[33m"), ANSI_CYAN("\u001B[36m"),
         ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ;
@@ -31,7 +31,7 @@ sealed interface Colours permits MADD { // actually this is package access abstr
 
         private final String code;
 
-        private AnsiCodes(String code){
+        AnsiCodes(String code){
             this.code = code;
             System.out.println("\u001B[0m" + "ENUM: " + name() + code + " -- INITIALIZED");
         }

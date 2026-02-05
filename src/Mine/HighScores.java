@@ -21,7 +21,7 @@ class HighScores {
     final static String filePath = "Highscores.txt";
     final static String outputFilePath = "Sorted.txt";
 
-    void filePrintHS(Life name, int temp) throws IOException {
+    void filePrintHS(String name, int temp) throws IOException {
 
         File highS = new File("Highscores.txt");
         if (!highS.exists()) {
@@ -127,7 +127,7 @@ class HighScores {
 
 
 
-    public static Map<String, String> HashMapFromTextFile() {
+    public static Map<String, String> HashMapFromTextFile() { // i dont think this works
 
         Map<String, String> map = new HashMap<>(); //TODO why turn integers into strings???????????????????
         BufferedReader br;
