@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static Mine.Life.main;
 import static java.lang.System.*;
 
 
@@ -174,7 +173,7 @@ class HighScores {
 
         String ch = checker.next();
         if(ch.equalsIgnoreCase("y")){
-            Life.startGame(checker);
+            Player.initPlayer(checker);
         }
         else if(ch.equalsIgnoreCase("n")) {
             out.println("See ya!");

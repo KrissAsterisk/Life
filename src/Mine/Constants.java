@@ -1,0 +1,6 @@
+package Mine;
+
+interface Constants {
+    int STARTING_MOVES = 50;
+    double DEFAULT_FOOD_POINTS = 100.0, DEFAULT_WATER_POINTS = 100.0, DEFAULT_ENERGY_POINTS = 100.0, DEFAULT_HEALTH_POINTS = 100.0;
+}
