@@ -6,15 +6,15 @@ import Mine.PlayerState;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
 
 import static Mine.Colours.AnsiCodes.ANSI_HIGH_INTENSITY;
 import static Mine.Colours.AnsiCodes.ANSI_RED;
 import static java.lang.System.out;
 
-public final class Fight extends Actions {
+public final class Fight implements Actions{
 
-    public Fight(){
+
+    public void action(Entities entity){
         ArrayList<Integer> luck = new ArrayList<>();
         for (int i = 1; i <= 100; i++) { // create 100 random numbers between 1 and 2501
             luck.add((int) (Math.random() * (2500)) + 1);
@@ -23,13 +23,18 @@ public final class Fight extends Actions {
         for (int numbers : luck) {
             sum += numbers;
         }
-        healthP -= (Math.random() * 99.99) + 0.01;
-        energyP -= (Math.random() * 21.202) + 10.21;
-        super(); // check if dead
+        entity.update(
+                0,
+                0,
+                -1 * ((Math.random() * 21.202) + 10.210),
+                -1 * ((Math.random() * 99.99) + 0.01)
+        );
+        Actions.deathCheck(entity);
+        //super.deathCheck(player); // check if dead
 
-        if(playerState == PlayerState.ALIVE){
+        if(entity.state() == PlayerState.ALIVE){
             if ((sum / luck.size()) < winThreshold) { // if sum is below threshold, player wins
-                playerState = PlayerState.FIGHT_WIN;
+                entity.setState(PlayerState.FIGHT_WIN);
             } else { //done fight loss message; put all strings into an array, split them into words, replace them in the array and randomize each array block to be printed.
                 String[] loss_msg = new String[16]; //TODO: API calls to AI to generate sentences? also can we not DO THIS???
                 String loss1 = " unfortunately you were outnumbered and barely managed to get away . ";

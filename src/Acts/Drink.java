@@ -1,14 +1,15 @@
 package Acts;
 
-import java.util.Scanner;
+public final class Drink implements Actions{
 
-public final class Drink extends Actions {
+    public void action(Entities entity){
 
-    public Drink(){
-        healthP += (Math.random() * 3.9) + 2.1;
-        energyP -= (Math.random() * 11.27) + 5.23;
-        waterP += (Math.random() * 26.757) + 14.543;
-        foodP += (Math.random() * 3.7) + 0.5;
-        super();
+        entity.update(
+                (Math.random() * 3.7) + 0.5,
+                (Math.random() * 26.757) + 14.543,
+                -1 * ((Math.random() * 11.27) + 5.23),
+                (Math.random() * 3.9) + 2.1
+        );
+        Actions.deathCheck(entity);
     }
 }

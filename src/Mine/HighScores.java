@@ -68,27 +68,7 @@ class HighScores {
         // Map.Entry object and arrange them in order increasing
         // or decreasing by values.
 
-        Comparator<Entry<String, String>> valueComparator
-                = (e1, e2) -> {
-                    String v1 = e1.getValue();
-                    String v2 = e2.getValue();
-                    return v2.compareTo(v1);
-                };
-
-        // Sort method needs a List, so let's first convert Set to List in Java
-        List<Entry<String, String>> listOfEntries
-                = new ArrayList<>(entries);
-
-        // sorting HashMap by values using comparator
-        listOfEntries.sort(valueComparator);
-
-        LinkedHashMap<String, String> sortedByValue
-                = new LinkedHashMap<>(listOfEntries.size());
-
-        // copying entries from List to Map
-        for(Entry<String, String> entry : listOfEntries){
-            sortedByValue.put(entry.getKey(), entry.getValue());
-        }
+        LinkedHashMap<String, String> sortedByValue = getStringStringLinkedHashMap(entries);
 
         out.println("HashMap after sorting entries by values ");
         Set<Entry<String, String>> entrySetSortedByValue = sortedByValue.entrySet();
@@ -124,6 +104,30 @@ class HighScores {
 
 }
 
+    private static LinkedHashMap<String, String> getStringStringLinkedHashMap(Set<Entry<String, String>> entries) {
+        Comparator<Entry<String, String>> valueComparator
+                = (e1, e2) -> {
+                    String v1 = e1.getValue();
+                    String v2 = e2.getValue();
+                    return v2.compareTo(v1);
+                };
+
+        // Sort method needs a List, so let's first convert Set to List in Java
+        List<Entry<String, String>> listOfEntries
+                = new ArrayList<>(entries);
+
+        // sorting HashMap by values using comparator
+        listOfEntries.sort(valueComparator);
+
+        LinkedHashMap<String, String> sortedByValue
+                = new LinkedHashMap<>(listOfEntries.size());
+
+        // copying entries from List to Map
+        for(Entry<String, String> entry : listOfEntries){
+            sortedByValue.put(entry.getKey(), entry.getValue());
+        }
+        return sortedByValue;
+    }
 
 
     public static Map<String, String> HashMapFromTextFile() { // i dont think this works
