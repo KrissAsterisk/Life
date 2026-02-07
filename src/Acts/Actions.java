@@ -4,14 +4,12 @@ package Acts;
 import Mine.Colours;
 import Mine.PlayerState;
 
-import javax.swing.text.html.parser.Entity;
-
 import static Mine.Colours.AnsiCodes.*;
 
 import static java.lang.System.*;
 
 
-public interface Actions { // G O D  C L A S S
+public interface Actions { // o7 to the old ( (  G O D  C L A S S  ) )
 
     void action(Entities entity);
 
