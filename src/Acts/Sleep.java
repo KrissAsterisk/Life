@@ -5,6 +5,10 @@ import Ents.Entities;
 public final class Sleep implements Actions {
 
 
+    public Sleep(Entities entity) {
+        action(entity);
+    }
+
     public void action(Entities entity){
         entity.update(
                 -1 * ((Math.random() * 21.3) + 30.5),

@@ -24,20 +24,23 @@ public final class Enemies implements Entities {
 //        this.damage = damage;
 //    }
 
-    public Enemies(String name){
-        out.println("A new "+ name +" appears!");
+    public Enemies(String name) {
+        out.println("A new " + name + " appears!");
     }
-    public Enemies(EnemyTypes type){
+
+    public Enemies(EnemyTypes type) {
         Object[] tempArray = type.getData();
-            this.name = tempArray[0].toString();
-            this.healthP = Double.parseDouble(tempArray[1].toString());
-            this.energyP = Double.parseDouble(tempArray[2].toString());
-            this.damage = Math.random() * Double.parseDouble(tempArray[3].toString()) + Double.parseDouble(tempArray[3].toString());
-            this.entityState = EntityState.ALIVE;
+        this.name = tempArray[0].toString();
+        this.healthP = Double.parseDouble(tempArray[1].toString());
+        this.energyP = Double.parseDouble(tempArray[2].toString());
+        this.damage = Math.random() * Double.parseDouble(tempArray[3].toString()) + Double.parseDouble(tempArray[3].toString());
+        this.entityState = EntityState.ALIVE;
         this(tempArray[0].toString());
     }
 
-    public double damage() { return damage; }
+    public double damage() {
+        return damage;
+    }
 
     public String getName() {
         return name;
@@ -47,9 +50,13 @@ public final class Enemies implements Entities {
         return energyP;
     }
 
-    public double food() { return 0;}
+    public double food() {
+        return 0;
+    }
 
-    public double water() {return 0;}
+    public double water() {
+        return 0;
+    }
 
     public double health() {
         return healthP;
@@ -65,25 +72,21 @@ public final class Enemies implements Entities {
 
     }
 
-    public void updateHealth(double healthP){
-        this.healthP+=healthP;
+    public void updateHealth(double healthP) {
+        this.healthP += healthP;
+
     }
 
-    public void updateEnergy(double energyP){
-        this.energyP+=energyP;
+    public void updateEnergy(double energyP) {
+        this.energyP += energyP;
     }
 
     public void setState(EntityState state) {
         this.entityState = state;
     }
 
-    public EntityState deathCheck(Entities entity){
+    public EntityState deathCheck(Entities entity) {
         if (entity.energy() <= 0 || entity.health() <= 0) {
-//            ANSI_HIGH_INTENSITY.printCode();
-//
-//            out.println(entity.getName() + "'s current state:");
-//            out.printf("%sHP: %f\n%sEP: %f\n", ANSI_RED.colourCode(), entity.health(), ANSI_YELLOW.colourCode(), entity.energy());
-//            Colours.clear();
             entity.setState(EntityState.DEAD);
         } else {
             entity.setState(EntityState.ALIVE); // redundant but its ok

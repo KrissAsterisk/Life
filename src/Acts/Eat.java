@@ -5,6 +5,10 @@ import Ents.Entities;
 public final class Eat implements Actions {
 
 
+    public Eat(Entities entities) {
+        action(entities);
+    }
+
     public void action(Entities entity){
 
         entity.update(

@@ -1,5 +1,6 @@
 package Acts;
 
+import Ents.Entities;
 import Ents.Players;
 import Mine.Colours;
 import Ents.EntityState;
@@ -10,7 +11,10 @@ import static Mine.Colours.AnsiCodes.ANSI_RED;
 import static java.lang.System.out;
 
 public final class Quit{
-    
+
+    public Quit(Entities entities) {
+    }
+
     public void action(Players player, Scanner reader){
 
         out.println("You've chosen to quit the game. Are you sure? (Y/N)");

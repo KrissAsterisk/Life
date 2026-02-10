@@ -4,6 +4,10 @@ import Ents.Entities;
 
 public final class Drink implements Actions{
 
+    public Drink(Entities entities) {
+        action(entities);
+    }
+
     public void action(Entities entity){
 
         entity.update(

@@ -11,6 +11,10 @@ import static java.lang.System.out;
 
 public final class Status implements Actions{
 
+    public Status(Entities entities) {
+        action(entities);
+    }
+
     public void action(Entities entity){
         ANSI_HIGH_INTENSITY.printCode();
         out.println(entity.getName() + "'s current state:");

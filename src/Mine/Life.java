@@ -17,56 +17,66 @@ import static Mine.NormalizeStrings.normalizeString;
 
 public class Life implements UserInterface, Constants {
 
-    static int startGame(Scanner reader, Players player, MADD madd)  {
+    static int startGame(Scanner reader, Players player, MADD madd) {
+        Actions sleep = Sleep::new, status = Status::new, eat = Eat::new, drink = Drink::new; // method references
+        Quit quit = new Quit(player);
+        Fight fight = new Fight();
         int finalMoves = 0, movesLeft = STARTING_MOVES;
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
-                var choice = normalizeString(reader.nextLine());
-                switch (PossibleMoves.checkInput(choice)) {
-                    case FIGHT -> {
-                        Enemies enemy;
-                        try{
-                           enemy  = new Enemies(EnemyTypes.randomizeEncounter());
-                           if(normalizeString(Arrays.toString(EnemyTypes.getEnemyType(a->a.isRare).toArray()))
-                            .contains(normalizeString(enemy.getName()))){
-                               out.println("rare spotted");
-                           }
-                        } catch (RuntimeException e) {
-                            out.println("Failed generating enemy, using default");
-                            enemy = new Enemies(EnemyTypes.getEnemyType(a -> a.isDefault).getFirst());
+            var choice = normalizeString(reader.nextLine());
+            switch (PossibleMoves.checkInput(choice)) {
+                case FIGHT -> {
+                    Enemies enemy; // declare enemy in bigger scope so it can be resigned in the try catch block
+                    try {
+                        enemy = new Enemies(EnemyTypes.randomizeEncounter());
+                        if (normalizeString(Arrays.toString(EnemyTypes.getEnemyType(a -> a.isRare).toArray()))
+                                .contains(normalizeString(enemy.getName()))) {
+                            out.println("rare spotted");
                         }
-                        new Fight().attack(player, enemy ,reader);
-                        if (player.state() == FIGHT_WIN) {
-                            out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");
-                            movesLeft += moveLogic();
-                            player.setState(ALIVE); // TODO !set back to alive if fled
+                        if(normalizeString(Arrays.toString(EnemyTypes.getEnemyType(a->!a.isRare).toArray())).
+                                contains(normalizeString(enemy.getName()))){
+                            out.println("not rare");
                         }
-
+                    } catch (RuntimeException e) {
+                        out.println("Failed generating enemy, using default");
+                        enemy = new Enemies(EnemyTypes.getEnemyType(a -> a.isDefault).getFirst());
                     }
-                    case SLEEP -> new Sleep().action(player);
-                    case DRINK -> new Drink().action(player);
-                    case EAT -> new Eat().action(player);
-                    case CONDITION -> { new Status().action(player);
-                        totalMoves--;
-                        movesLeft--; // don't count towards the final score but still uses a move
-                    }
-                    case QUIT -> { new Quit().action(player, reader); // needs to be in catch block
-                        totalMoves--; // dont count towards total moves
-                    }
-                    case null -> {
-                        out.println("Choose a number between 0 and 7. You lose a move every time you mistype.");
-                        totalMoves--;
-                        movesLeft--; // don't count for the final score.
+                    //new Fight().attack(player, enemy, reader, status);
+                    fight.attack(player, enemy, reader, status);
+                    if (player.state() == FIGHT_WIN) {
+                        out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");
+                        movesLeft += moveLogic();
+                        player.setState(RESET);
                     }
                 }
-                if (player.state() == DEAD || player.state() == EXIT_GAME) {
-                    //TODO: run the "status check" on a separate thread when main game loop is running
-                    break;
+                case SLEEP -> sleep.action(player);
+                case DRINK -> drink.action(player);
+                case EAT ->  eat.action(player);
+                case CONDITION -> {
+                    status.action(player);
+                    totalMoves--;
+                    movesLeft--; // don't count towards the final score but still uses a move
                 }
-                UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move
-                if (movesLeft - totalMoves == 5) {
-                    UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
+                case QUIT -> {
+                   // new Quit(null).action(player, reader); // care
+                    quit.action(player, reader);
+                    totalMoves--; // dont count towards total moves
                 }
-                finalMoves = totalMoves; // set it after every move for the quit
+                case null -> {
+                    out.println("Choose a number between 0 and 7. You lose a move every time you mistype.");
+                    totalMoves--;
+                    movesLeft--; // don't count for the final score.
+                }
+            }
+            if (player.state() == DEAD || player.state() == EXIT_GAME) {
+                //TODO: run the "status check" on a separate thread when main game loop is running
+                break;
+            }
+            UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move
+            if (movesLeft - totalMoves == 5) {
+                UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
+            }
+            finalMoves = totalMoves; // set it after every move for the quit
         }
         finalMoves++;       // count the last move before death
         return finalMoves;
