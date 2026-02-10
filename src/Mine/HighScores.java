@@ -150,13 +150,13 @@ class HighScores {
                 // split the line by :
                 String[] parts = line.split("'s highest number of moves achieved: ");
 
-                // first part is name, second is number
+                // first part is getName, second is number
 
                     String name = parts[0].trim();
                     String number = parts[1].trim();
                     //String nextNumber = parts[j+=3].trim();
 
-                    // put name, number in HashMap if they are
+                    // put getName, number in HashMap if they are
                     // not empty
                     if (!name.isEmpty() && !number.isEmpty()) {
                         map.put(name, number);

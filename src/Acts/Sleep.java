@@ -1,5 +1,7 @@
 package Acts;
 
+import Ents.Entities;
+
 public final class Sleep implements Actions {
 
 
@@ -10,6 +12,6 @@ public final class Sleep implements Actions {
                 (Math.random() * 26.4) + 15.2,
                 (Math.random() * 23.21) + 8.51
         );
-        Actions.deathCheck(entity);
+        entity.deathCheck(entity);
     }
 }

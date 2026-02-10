@@ -1,6 +1,8 @@
 package Mine;
 
 import Acts.*;
+import Ents.*;
+import Ents.EnemyTypes;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -8,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static Mine.Colours.AnsiCodes.*;
-
+import static Ents.EntityState.*;
 import static java.lang.System.*;
 
 
@@ -21,11 +23,15 @@ public class Life implements UserInterface, Constants {
 
                 switch (PossibleMoves.checkInput(choice)) {
                     case FIGHT -> {
-                        new Fight().action(player);
-                        if (player.state() == PlayerState.FIGHT_WIN) {
-                            movesLeft += PlayerState.moveLogic();
-                            player.setState(PlayerState.ALIVE);
+                        //new Fight().action(player);
+                        var enemy  = new Enemies(EnemyTypes.randomizeEncounter());
+                        new Fight().attack(player, enemy ,reader);
+                        if (player.state() == FIGHT_WIN) {
+                            out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");
+                            movesLeft += moveLogic();
+                            player.setState(ALIVE); // TODO !set back to alive if fled
                         }
+
                     }
                     case SLEEP -> new Sleep().action(player);
                     case DRINK -> new Drink().action(player);
@@ -43,11 +49,11 @@ public class Life implements UserInterface, Constants {
                         movesLeft--; // don't count for the final score.
                     }
                 }
-                if (player.state() == PlayerState.DEAD || player.state() == PlayerState.EXIT_GAME) {
+                if (player.state() == DEAD || player.state() == EXIT_GAME) {
                     //TODO: run the "status check" on a separate thread when main game loop is running
                     break;
                 }
-                UserInterface.showChoices(movesLeft, totalMoves);
+                UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move
                 if (movesLeft - totalMoves == 5) {
                     UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
                 }
@@ -58,7 +64,7 @@ public class Life implements UserInterface, Constants {
     }
 
     static void endGame(Players player, int totalMoves) {
-        if (player.state() != PlayerState.EXIT_GAME) {
+        if (player.state() != EXIT_GAME) {
             ANSI_HIGH_INTENSITY.printCode();
             ANSI_RED.printCode();
             out.println("You died! Game over!");
@@ -71,7 +77,7 @@ public class Life implements UserInterface, Constants {
         Colours.clear(); // initialize enum
         MADD madd = new MADD();
         var reader = new Scanner(in);
-        var player = new Players(Player.initPlayer(reader).name(), PlayerState.ALIVE, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS);
+        var player = new Players(Player.initPlayer(reader).name(), ALIVE, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS);
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         endGame(player, startGame(reader, player, madd)); // start the game
@@ -79,7 +85,7 @@ public class Life implements UserInterface, Constants {
         out.println("You lasted: " + ANSI_HIGH_INTENSITY.colourCode() + (ChronoUnit.MINUTES.between(gameStartTime, gameOverTime)) + " minutes and " + (ChronoUnit.SECONDS.between(gameStartTime, gameOverTime)) + " seconds.");
         //HighScores highScores = new HighScores();
         Colours.clear();
-        //highScores.filePrintHS(player.name(), temp); TODO:fix the sorting
+        //highScores.filePrintHS(player.getName(), temp); TODO:fix the sorting
         reader.close();
         exit(0);
     }

@@ -24,6 +24,7 @@ public interface FightLossMessages {
         loss.add(" You die in a hilarious pose ");
         loss.add(" You're fired . ");
         loss.add(" A light flashes before your eyes ! Oh wait it's just your google glasses ... ");
+        loss.add(" You trip on a VERY large rock . ");
 
         Set<String> words = new LinkedHashSet<>();
         for(String sentence : loss){

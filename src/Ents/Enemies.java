@@ -1,0 +1,93 @@
+package Ents;
+
+import Mine.Colours;
+
+import java.util.Arrays;
+
+import static Mine.Colours.AnsiCodes.*;
+import static java.lang.System.out;
+
+public final class Enemies implements Entities {
+
+    private EntityState entityState;
+    private double healthP;
+    private double energyP;
+
+    private double damage;
+    private String name;
+
+//    public Enemies(String name, EntityState state, double healthP, double energyP, double damage){
+//        this.name = name;
+//        this.entityState = state;
+//        this.healthP = healthP;
+//        this.energyP = energyP;
+//        this.damage = damage;
+//    }
+
+    public Enemies(String name){
+        out.println("A new "+ name +" appears!");
+    }
+    public Enemies(EnemyTypes type){
+        Object[] tempArray = type.getData();
+            this.name = tempArray[0].toString();
+            this.healthP = Double.parseDouble(tempArray[1].toString());
+            this.energyP = Double.parseDouble(tempArray[2].toString());
+            this.damage = Math.random() * Double.parseDouble(tempArray[3].toString()) + Double.parseDouble(tempArray[3].toString());
+            this.entityState = EntityState.ALIVE;
+        this(tempArray[0].toString());
+    }
+
+    public double damage() { return damage; }
+
+    public String getName() {
+        return name;
+    }
+
+    public double energy() {
+        return energyP;
+    }
+
+    public double food() { return 0;}
+
+    public double water() {return 0;}
+
+    public double health() {
+        return healthP;
+    }
+
+    public EntityState state() {
+        return entityState;
+    }
+
+    public void update(double foodP, double waterP, double energyP, double healthP) {
+        this.healthP += healthP;
+        this.energyP += energyP;
+
+    }
+
+    public void updateHealth(double healthP){
+        this.healthP+=healthP;
+    }
+
+    public void updateEnergy(double energyP){
+        this.energyP+=energyP;
+    }
+
+    public void setState(EntityState state) {
+        this.entityState = state;
+    }
+
+    public EntityState deathCheck(Entities entity){
+        if (entity.energy() <= 0 || entity.health() <= 0) {
+//            ANSI_HIGH_INTENSITY.printCode();
+//
+//            out.println(entity.getName() + "'s current state:");
+//            out.printf("%sHP: %f\n%sEP: %f\n", ANSI_RED.colourCode(), entity.health(), ANSI_YELLOW.colourCode(), entity.energy());
+//            Colours.clear();
+            entity.setState(EntityState.DEAD);
+        } else {
+            entity.setState(EntityState.ALIVE); // redundant but its ok
+        }
+        return entity.state();
+    }
+}

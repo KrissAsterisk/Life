@@ -1,5 +1,7 @@
 package Mine;
 
+import Ents.EntityState;
+
 import java.util.Scanner;
 
 import static Mine.Colours.AnsiCodes.*;
@@ -8,7 +10,7 @@ import static java.lang.System.out;
 
 // Point of this record is to make it clear that I do NOT want anything to change the default init values of a player
 record Player(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP,
-              PlayerState currentState) {  //TODO: use this immutable class to create players and store stats in their class + inherit moves from acts
+              EntityState currentState) {
 
     Player { // compact constructor!!
         out.println(ANSI_GREEN.colourCode() + "Welcome to the game, " + ANSI_YELLOW.colourCode() + name + ANSI_GREEN.colourCode() + "!"); // welcome the player anytime they "sign in"
@@ -27,7 +29,8 @@ record Player(String name, Scanner reader, double foodP, double waterP, double e
             Colours.clear();
             return initPlayer(reader);
         }
-        return new Player(nameChange(reader, name), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS, PlayerState.ALIVE);
+
+        return new Player(nameChange(reader, name), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS, EntityState.ALIVE);
 
     }
 
@@ -37,7 +40,9 @@ record Player(String name, Scanner reader, double foodP, double waterP, double e
         if (reader.nextLine().replaceAll(" ", "").toLowerCase().contains("yes")) {
             out.println("Input your new name: ");
             Colours.clear();
-            return reader.nextLine();
+            name = reader.nextLine();
+            nameChange(reader, name);
+            return name;
         } else {
             out.println(ANSI_RED.colourCode() + "Name locked in.\n");
             Colours.clear();

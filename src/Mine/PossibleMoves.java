@@ -1,5 +1,6 @@
 package Mine;
 
+
 public enum PossibleMoves {
     FIGHT(1, "fight"),
     SLEEP(2, "sleep"),
@@ -7,7 +8,6 @@ public enum PossibleMoves {
     EAT (4, "eat"),
     CONDITION (5, "condition"),
     QUIT (6, "quit");
-
     private final int intValue;
     private final String stringValue;
 

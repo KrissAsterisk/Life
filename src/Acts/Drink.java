@@ -1,5 +1,7 @@
 package Acts;
 
+import Ents.Entities;
+
 public final class Drink implements Actions{
 
     public void action(Entities entity){
@@ -10,6 +12,6 @@ public final class Drink implements Actions{
                 -1 * ((Math.random() * 11.27) + 5.23),
                 (Math.random() * 3.9) + 2.1
         );
-        Actions.deathCheck(entity);
+        entity.deathCheck(entity);
     }
 }

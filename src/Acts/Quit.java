@@ -1,7 +1,8 @@
 package Acts;
 
+import Ents.Players;
 import Mine.Colours;
-import Mine.PlayerState;
+import Ents.EntityState;
 
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ import static Mine.Colours.AnsiCodes.ANSI_RED;
 import static java.lang.System.out;
 
 public final class Quit{
-
+    
     public void action(Players player, Scanner reader){
 
         out.println("You've chosen to quit the game. Are you sure? (Y/N)");
@@ -17,7 +18,7 @@ public final class Quit{
         if (b.equalsIgnoreCase("y")) {
             out.println("Goodbye!");
             reader.close();
-            player.setState(PlayerState.EXIT_GAME);
+            player.setState(EntityState.EXIT_GAME);
         } else if (b.equalsIgnoreCase("n")) {
             // nothing yet
         } else {
