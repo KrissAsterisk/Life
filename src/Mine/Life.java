@@ -12,19 +12,28 @@ import java.util.*;
 import static Mine.Colours.AnsiCodes.*;
 import static Ents.EntityState.*;
 import static java.lang.System.*;
+import static Mine.NormalizeStrings.normalizeString;
 
 
 public class Life implements UserInterface, Constants {
 
-    static int startGame(Scanner reader, Players player, MADD madd) {
+    static int startGame(Scanner reader, Players player, MADD madd)  {
         int finalMoves = 0, movesLeft = STARTING_MOVES;
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
-                var choice = reader.nextLine().replaceAll(" ", "").toLowerCase();
-
+                var choice = normalizeString(reader.nextLine());
                 switch (PossibleMoves.checkInput(choice)) {
                     case FIGHT -> {
-                        //new Fight().action(player);
-                        var enemy  = new Enemies(EnemyTypes.randomizeEncounter());
+                        Enemies enemy;
+                        try{
+                           enemy  = new Enemies(EnemyTypes.randomizeEncounter());
+                           if(normalizeString(Arrays.toString(EnemyTypes.getEnemyType(a->a.isRare).toArray()))
+                            .contains(normalizeString(enemy.getName()))){
+                               out.println("rare spotted");
+                           }
+                        } catch (RuntimeException e) {
+                            out.println("Failed generating enemy, using default");
+                            enemy = new Enemies(EnemyTypes.getEnemyType(a -> a.isDefault).getFirst());
+                        }
                         new Fight().attack(player, enemy ,reader);
                         if (player.state() == FIGHT_WIN) {
                             out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");

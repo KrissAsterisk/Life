@@ -97,7 +97,7 @@ public final class Fight implements Actions, FightLossMessages {
             if (i != newArrayLength - 1) // put a space between every word except the last
                 out.print(" ");
         } // end sentences with .
-        out.println("."); // set with !, ?, !! enums with rand
+        out.print(".\n"); // set with !, ?, !! enums with rand
         Colours.clear();
     }
 }
