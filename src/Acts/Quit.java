@@ -12,8 +12,6 @@ import static java.lang.System.out;
 
 public final class Quit{
 
-    public Quit(Entities entities) {
-    }
 
     public void action(Players player, Scanner reader){
 
