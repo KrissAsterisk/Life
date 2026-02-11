@@ -11,7 +11,7 @@ public final class Players implements Entities {
     private double foodP, waterP, energyP, healthP;
     private EntityState entityState;
     private final String pName;
-    private final double damage = 10; // TODO: add lvl up system
+    private final double damage = Math.random() * 10 + 10; // TODO: add lvl up system
 
     public Players(String pName, EntityState entityState, double foodP, double waterP, double energyP, double healthP) {
         this.entityState = entityState;

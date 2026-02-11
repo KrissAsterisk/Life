@@ -9,10 +9,10 @@ import static Mine.Life.*;
 import static java.lang.System.out;
 
 // Point of this record is to make it clear that I do NOT want anything to change the default init values of a player
-record Player(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP,
+public record Player(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP,
               EntityState currentState) {
 
-    Player { // compact constructor!!
+    public Player { // compact constructor!!
         out.println(ANSI_GREEN.colourCode() + "Welcome to the game, " + ANSI_YELLOW.colourCode() + name + ANSI_GREEN.colourCode() + "!"); // welcome the player anytime they "sign in"
         Colours.clear(); // less boilerplate yuppie
 
@@ -49,4 +49,5 @@ record Player(String name, Scanner reader, double foodP, double waterP, double e
             return name;
         }
     }
+    private final static double DEFAULT_FOOD_POINTS = 100.0, DEFAULT_WATER_POINTS = 100.0, DEFAULT_ENERGY_POINTS = 100.0, DEFAULT_HEALTH_POINTS = 100.0;
 }

@@ -8,7 +8,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 import static Mine.Colours.AnsiCodes.*;
-import static Ents.EntityState.*;
 import static java.lang.System.*;
 
 
@@ -16,7 +15,8 @@ public final class Life implements UserInterface, Constants, GameStatus {
     public static void main() {
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
-        var player = new Players(Player.initPlayer(reader).name(), ALIVE, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS);
+        var initPlayer = Player.initPlayer(reader);
+        var player = new Players(initPlayer.name(), initPlayer.currentState(), initPlayer.foodP(), initPlayer.waterP(), initPlayer.energyP(), initPlayer.healthP());
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         GameStatus.endGame(player, GameStatus.startGame(reader, player)); // start the game
