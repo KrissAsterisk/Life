@@ -15,7 +15,7 @@ public final class Life implements UserInterface, Constants, GameStatus {
     public static void main() {
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
-        var initPlayer = Player.initPlayer(reader);
+        Player initPlayer = Player.initPlayer(reader);
         var player = new Players(initPlayer.name(), initPlayer.currentState(), initPlayer.foodP(), initPlayer.waterP(), initPlayer.energyP(), initPlayer.healthP());
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
@@ -29,4 +29,3 @@ public final class Life implements UserInterface, Constants, GameStatus {
         exit(0);
     }
 }
-

@@ -2,6 +2,8 @@ package Acts;
 
 import Ents.Entities;
 
+import static Acts.RandomGenerator.randomize;
+
 public final class Drink implements Actions{
 
     public Drink(Entities entities) {
@@ -11,10 +13,10 @@ public final class Drink implements Actions{
     public void action(Entities entity){
 
         entity.update(
-                (Math.random() * 3.7) + 0.5,
-                (Math.random() * 26.757) + 14.543,
-                -1 * ((Math.random() * 11.27) + 5.23),
-                (Math.random() * 3.9) + 2.1
+                1 * (randomize(3.7,0.5)),
+                1 * (randomize(26.757, 14.543)),
+                -1 * (randomize(11.27, 5.23)),
+                1 * (randomize(3.9, 2.1))
         );
         entity.deathCheck(entity);
     }

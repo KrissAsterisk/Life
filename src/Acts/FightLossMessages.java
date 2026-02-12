@@ -1,6 +1,10 @@
 package Acts;
 
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface FightLossMessages {
 
@@ -25,6 +29,9 @@ public interface FightLossMessages {
         loss.add(" You're fired . ");
         loss.add(" A light flashes before your eyes ! Oh wait it's just your google glasses ... ");
         loss.add(" You trip on a VERY large rock . ");
+
+        //BiFunction<ArrayList, Integer, String> getStrings = (var x, var y) -> (String) x.get(y);
+        //System.out.println(getStrings.apply(loss, 0)); // here instead of 0 you can get like a readline and ask the user to input whichever string they want to get from the array
 
         Set<String> words = new LinkedHashSet<>();
         for(String sentence : loss){

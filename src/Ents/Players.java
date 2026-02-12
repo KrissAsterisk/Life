@@ -3,6 +3,7 @@ package Ents;
 
 import Mine.Colours;
 
+import static Acts.RandomGenerator.randomize;
 import static Mine.Colours.AnsiCodes.*;
 import static java.lang.System.out;
 
@@ -11,12 +12,12 @@ public final class Players implements Entities {
     private double foodP, waterP, energyP, healthP;
     private EntityState entityState;
     private final String pName;
-    private final double damage = Math.random() * 10 + 10; // TODO: add lvl up system
+    private final double damage; // TODO: add lvl up system
 
     public Players(String pName, EntityState entityState, double foodP, double waterP, double energyP, double healthP) {
         this.entityState = entityState;
         this.pName = pName;
-
+        this.damage  = randomize (10, 10);
         this.foodP = healthP;
         this.waterP = energyP;
         this.energyP = waterP;
@@ -50,7 +51,7 @@ public final class Players implements Entities {
                     ANSI_CYAN.colourCode(), entity.water());
             Colours.clear();
             entity.setState(EntityState.DEAD);
-        } else if (meanWarning < 50.00 && meanWarning > -10.00) {
+        } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless!
             out.printf("%n%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!%n",
                     ANSI_RED.colourCode(), ANSI_HIGH_INTENSITY.colourCode(), ANSI_RESET.colourCode());
             Colours.clear();

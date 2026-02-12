@@ -9,7 +9,7 @@ import java.util.Scanner;
 import static Ents.EntityState.*;
 import static Mine.Colours.AnsiCodes.*;
 import static Mine.Constants.*;
-import static Mine.NormalizeStrings.normalizeString;
+import static Mine.NormalizeStrings.normalize;
 import static java.lang.System.out;
 import static Ents.EnemyTypes.*;
 
@@ -23,7 +23,7 @@ sealed interface GameStatus permits Life {
             enemy = new Enemies(getEnemyRarity(type -> type.isDefault).getFirst()); // overloaded func, if you pass it just the boolean to look for, it will return the 1st available bool
         }
         out.println(getEnemyData(type -> type.maxHealth, enemy) + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match
-        if (EnemyTypes.getEnemyRarity(type -> type.isRare, enemy))
+        if (getEnemyRarity(type -> type.isRare, enemy))
             out.println(enemy.getName() + " is Rare!");// look for any rare enemyTypes and see if the new generated one is Rare or not based on its declaration in the Enum;
         if (getEnemyRarity(type -> !type.isRare, enemy))
             out.println(enemy.getName() + " is Common!");
@@ -48,7 +48,7 @@ sealed interface GameStatus permits Life {
         Fight fight = new Fight();
         int finalMoves = 0, movesLeft = STARTING_MOVES; //TODO make moves static and part of player class?
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
-            var choice = normalizeString(reader.nextLine());
+            var choice = normalize(reader);
             switch (PossibleMoves.checkInput(choice)) {
                 case FIGHT ->
                         movesLeft += fightLogic(fight, player, reader, status);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET

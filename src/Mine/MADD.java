@@ -1,12 +1,11 @@
 package Mine;
 
-import java.util.Random;
+import static Acts.RandomGenerator.rand;
 import static java.lang.System.*;
 
 final class MADD implements Colours {
 
     public void rngC(int duration) { // TODO look at enum in interface mb
-        Random rand = new Random();
         String[] array = new String[8];
         array[0] = ANSI_BLACK_BACKGROUND;
         array[1] = ANSI_WHITE_BACKGROUND;

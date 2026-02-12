@@ -2,16 +2,23 @@ package Acts;
 
 import Ents.*;
 import Mine.Colours;
+import Mine.Constants;
 
-import java.util.*;
 
+import java.util.Random;
+import java.util.Scanner;
+import java.util.function.Predicate;
+import java.util.Arrays;
+
+import static Acts.RandomGenerator.*;
 import static Ents.EntityState.*;
 import static Mine.Colours.AnsiCodes.*;
 import static Acts.PossibleFightMoves.checkInput;
+import static Mine.NormalizeStrings.normalize;
 import static java.lang.System.out;
 
-public final class Fight implements Actions, FightLossMessages {
-    private static final int ENERGY_COST = 10;
+public final class Fight implements Actions, FightLossMessages, Constants {
+    private final static double MIN_ENERGY_COST = 10;
 
 
     public void attack(Entities player, Entities enemy, Scanner reader, Actions status) {
@@ -19,22 +26,20 @@ public final class Fight implements Actions, FightLossMessages {
 //            new Goblin(); // this belongs in a museum
 //        }
         player.setState(RESET); // reset vulnerable
-        final double VULNERABILITY_DEBUFF = 2.25;
         LOOP:
         do {
             status.action(enemy);
             out.println("What is your next move?");
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
-            switch (checkInput(reader.nextLine().toLowerCase().trim())) {
+            switch (checkInput(normalize(reader))) {
                 case ATTACK -> { // TODO use constants for some of these
-                    player.updateEnergy(-15);
+                    player.updateEnergy(-randomize(6.21, MIN_ENERGY_COST));
                     if (player.deathCheck(player) == DEAD) break LOOP; // break instantly
                     enemy.updateHealth(-player.damage());
                     if (enemy.deathCheck(enemy) == DEAD) break LOOP;
-                    status.action(enemy);
                 }
                 case DODGE -> {
-                    if (new Random().nextInt(1, 11) == 1) { //TODO: combine with level up
+                    if ((RandomGenerator.getXinY(1, 10))) { //TODO: combine with level up
                         out.println("You gracefully dodge and the " + enemy.getName() + " hits itself!");
                         enemy.updateHealth(-enemy.damage());
                     } else {
@@ -44,21 +49,22 @@ public final class Fight implements Actions, FightLossMessages {
                     if (enemy.deathCheck(enemy) == DEAD) break LOOP;
                 }
                 case FLEE -> {
-                    //need more
                     enemy.setState(DEAD);
                     player.setState(COWARD);
-                    action(player); // TODO rename this later
+                    out.println(ANSI_RED.colourCode() + "You coward.");
+                    Colours.clear();
                     break LOOP;
                 }
                 case null, default -> {
                     System.out.println("You trip on a rock!");
                     player.updateHealth(-5);
                 }
-            }
-            if (!(enemy.state() == DEAD) && new Random().nextDouble(1, enemy.energy() + 1) / enemy.energy() > 0.5) { // TODO idea is so that the more energy an enemy has, the more likely they are to move
-                out.println("The " + enemy.getName() + " attacks!\n");
-                enemy.updateEnergy(-ENERGY_COST);
-                if (!(new Random().nextInt(1, 21) == 1)) { // 1 in 21 to dodge
+            } //    0 - 1 double values     <- // ->
+            // Math.random() < (enemy.energy() / (enemy.energy() + ENERGY_COST))
+            if (( !(enemy.state() == DEAD) && Math.random() < (enemy.energy() / (enemy.energy() + MIN_ENERGY_COST)) )| enemy.energy() >= 200.0) { // idea is so that the more energy an enemy has, the more likely they are to move
+                out.println("The " + enemy.getName() + " attacks for "+ enemy.damage() + " damage!\n");
+                enemy.updateEnergy(-randomize(5.2364, MIN_ENERGY_COST));
+                if (!(getXinY(1, 20))) { // 1 in 20 to dodge
                     if(player.state() == VULNERABLE){
                         player.updateHealth(-(enemy.damage()*VULNERABILITY_DEBUFF));// punishment for missing dodge
                         if(player.deathCheck(player) == DEAD){ break LOOP;}
@@ -80,8 +86,15 @@ public final class Fight implements Actions, FightLossMessages {
 
         String[] funnyHaha = FightLossMessages.getStrings();
         funnyHaha = Arrays.stream(funnyHaha).distinct().toArray(String[]::new); // this also removes duplicates but its a redundancy now
+//        String[] finalFunnyHaha = funnyHaha;
+//        var ref = new Object() {
+//            final BooleanSupplier test = () -> Arrays.toString(finalFunnyHaha).isEmpty();
+//        };
+//        out.println(ref.test.getAsBoolean())
 
-        Random rand = new Random();
+        //Predicate<String[]> doesArrayContainPunctuation = x -> Arrays.toString(x).contains(".");
+        //out.println(doesArrayContainPunctuation.test(funnyHaha));
+
         for (int i = 0; i < funnyHaha.length; i++) {
             int randomIndexToSwap = rand.nextInt(0, funnyHaha.length); // bound is exclusive
             String temp = funnyHaha[randomIndexToSwap];

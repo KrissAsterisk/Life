@@ -5,12 +5,11 @@ import Ents.EntityState;
 import java.util.Scanner;
 
 import static Mine.Colours.AnsiCodes.*;
-import static Mine.Life.*;
 import static java.lang.System.out;
 
-// Point of this record is to make it clear that I do NOT want anything to change the default init values of a player
+// The point of this record is to make it clear that I do NOT want anything to change the default init values of a player
 public record Player(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP,
-              EntityState currentState) {
+                     EntityState currentState) {
 
     public Player { // compact constructor!!
         out.println(ANSI_GREEN.colourCode() + "Welcome to the game, " + ANSI_YELLOW.colourCode() + name + ANSI_GREEN.colourCode() + "!"); // welcome the player anytime they "sign in"
@@ -36,18 +35,30 @@ public record Player(String name, Scanner reader, double foodP, double waterP, d
 
 
     private static String nameChange(Scanner reader, String name) {
-        out.println("\nWould you like to change your name?");
-        if (reader.nextLine().replaceAll(" ", "").toLowerCase().contains("yes")) {
+        if(name == null){
+            out.println("Please choose another name: ");
+            name = reader.nextLine();
+        }
+            out.println("Are you sure " + name + " is your name?");
+        if (reader.nextLine().replaceAll(" ", "").toLowerCase().contains("y")) {
+            out.println(ANSI_RED.colourCode() + "Name locked in.\nGood Luck.");
+            Colours.clear();
+            return name;
+        } else {
             out.println("Input your new name: ");
             Colours.clear();
             name = reader.nextLine();
+            if (name.equals("Asterisk")) {
+                ANSI_RED.printCode();
+                ANSI_HIGH_INTENSITY.printCode();
+                out.println("The name " + name + " is reserved.");
+                Colours.clear();
+                name = null;
+                return nameChange(reader, name);
+            }
             nameChange(reader, name);
-            return name;
-        } else {
-            out.println(ANSI_RED.colourCode() + "Name locked in.\n");
-            Colours.clear();
-            return name;
         }
+        return name;
     }
     private final static double DEFAULT_FOOD_POINTS = 100.0, DEFAULT_WATER_POINTS = 100.0, DEFAULT_ENERGY_POINTS = 100.0, DEFAULT_HEALTH_POINTS = 100.0;
 }
