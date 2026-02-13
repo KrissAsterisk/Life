@@ -19,7 +19,7 @@ public final class Quit{
         String b = reader.nextLine();
         if (b.equalsIgnoreCase("y")) {
             out.println("Goodbye!");
-            reader.close();
+            //reader.close();
             player.setState(EntityState.EXIT_GAME);
         } else if (b.equalsIgnoreCase("n")) {
             // nothing yet

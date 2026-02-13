@@ -9,7 +9,8 @@ import static java.lang.System.out;
 
 public enum EntityState {
     DEAD{}, COWARD {}, EXIT_GAME{}, ALIVE {},
-    FIGHT_WIN{}, VULNERABLE, RESET;
+    FIGHT_WIN{}, VULNERABLE,
+    RESET;
 
     public static int moveLogic(){
         int addMoves = new Random().nextInt(5, 16); // at least 5 moves

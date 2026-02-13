@@ -3,190 +3,97 @@ package Mine;
 
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.stream.IntStream;
 
+
+import static Mine.Colours.AnsiCodes.*;
 import static java.lang.System.*;
 
 
 class HighScores {
 
-    final static String filePath = "Highscores.txt";
-    final static String outputFilePath = "Sorted.txt";
-
-    void filePrintHS(String name, int temp, Scanner reader) throws IOException {
-
-        File highS = new File("Highscores.txt");
-        if (!highS.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            highS.createNewFile();
-        }
-        FileWriter scores = new FileWriter(highS, true);
-        scores.write( name + "'s highest number of moves achieved: " + temp + "\n");
-        scores.close();
-
-        //-----------------------------------------
-
-        // read text file to HashMap
-        Map<String, String> mapFromFile = HashMapFromTextFile();
-
-        // iterate over HashMap entries
-        for (Entry<String, String> entry :
-                mapFromFile.entrySet()) {
-            out.println(entry.getKey() + "'s highest number of moves achieved: "
-                    + entry.getValue());
-        }
-        File sorted = new File(outputFilePath);
-        if (!sorted.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            sorted.createNewFile();
-        }
-        // -----------------------------------------------------
-
-        Set<Entry<String, String>> entries = mapFromFile.entrySet();
-        // sort HashMap by keys first
-        // all you need to do is create a TreeMap with mappings of HashMap
-        // TreeMap keeps all entries in sorted order
-        TreeMap<String, String> sortedMap = new TreeMap<>(mapFromFile);
-        Set<Entry<String, String>> mappings = sortedMap.entrySet();
-
-        out.println("HashMap after sorting by keys in ascending order ");
-        for(Entry<String, String> mapping : mappings){
-            out.println(mapping.getKey() + " ==> " + mapping.getValue());
-        }
+    private final String name;
+    private final int finalMoves;
+    private final Scanner reader;
 
 
-        // sort the HashMap by values
-        // there is no direct way to sort HashMap by values, but you
-        // can do this by writing your own comparator, which takes
-        // Map.Entry object and arrange them in order increasing
-        // or decreasing by values.
-
-        LinkedHashMap<String, String> sortedByValue = getStringStringLinkedHashMap(entries);
-
-        out.println("HashMap after sorting entries by values ");
-        Set<Entry<String, String>> entrySetSortedByValue = sortedByValue.entrySet();
-
-        for(Entry<String, String> mapping : entrySetSortedByValue){
-            out.println(mapping.getKey() + "'s highest number of moves achieved: " + mapping.getValue());
-        }
-
-       //fixed sort this shit already TODO only problem is that it overwrites existing values with lower ones.
-
-        // ------------------------------------------------------
-
-
-        try (BufferedWriter bf = new BufferedWriter(new FileWriter(sorted))) {
-
-            // iterate map entries
-            for (Entry<String, String> entry : sortedByValue.entrySet()) {
-                // put key and value separated
-                bf.write(entry.getKey() + "'s highest number of moves achieved: " + entry.getValue() + "\n"); //TODO if the value is smaller than the already in the sorted file, then it should be ignored
-
-                // new line
-                bf.newLine();
-            }
-
-            bf.flush();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    //-------------------------------------------
-        out.println("Wanna try again? Y / N");
-
-    retryGame(reader);
-
-}
-
-    private static LinkedHashMap<String, String> getStringStringLinkedHashMap(Set<Entry<String, String>> entries) {
-        Comparator<Entry<String, String>> valueComparator
-                = (e1, e2) -> {
-                    String v1 = e1.getValue();
-                    String v2 = e2.getValue();
-                    return v2.compareTo(v1);
-                };
-
-        // Sort method needs a List, so let's first convert Set to List in Java
-        List<Entry<String, String>> listOfEntries
-                = new ArrayList<>(entries);
-
-        // sorting HashMap by values using comparator
-        listOfEntries.sort(valueComparator);
-
-        LinkedHashMap<String, String> sortedByValue
-                = new LinkedHashMap<>(listOfEntries.size());
-
-        // copying entries from List to Map
-        for(Entry<String, String> entry : listOfEntries){
-            sortedByValue.put(entry.getKey(), entry.getValue());
-        }
-        return sortedByValue;
+    public HighScores(String name, int finalMoves, Scanner reader) {
+        this.name = name;
+        this.finalMoves = finalMoves;
+        this.reader = reader;
+        writeHighScoreToFile();
     }
 
-
-    public static Map<String, String> HashMapFromTextFile() { // i dont think this works
-
-        Map<String, String> map = new HashMap<>(); //TODO why turn integers into strings???????????????????
-        BufferedReader br;
+    private void writeHighScoreToFile() {
+        File highS;
+        FileWriter scores;
+        highS = new File(Constants.highScoresFilePath);
         try {
-
-            // create file object
-            File file = new File(filePath);
-
-            // create BufferedReader object from the File
-            br = new BufferedReader(new FileReader(file));
-
-            String line;
-
-            // read file line by line
-            while ((line = br.readLine()) != null) {
-
-                // split the line by :
-                String[] parts = line.split("'s highest number of moves achieved: ");
-
-                // first part is getName, second is number
-
-                    String name = parts[0].trim();
-                    String number = parts[1].trim();
-                    //String nextNumber = parts[j+=3].trim();
-
-                    // put getName, number in HashMap if they are
-                    // not empty
-                    if (!name.isEmpty() && !number.isEmpty()) {
-                        map.put(name, number);
-
+            if (!highS.exists()) {
+                if (!highS.createNewFile()) {
+                    out.println("Failed to create file!");
                 }
             }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+            scores = new FileWriter(highS, true);
+            scores.write(name + "'s highest number of moves achieved: " + finalMoves + "\n");
+            scores.close();
+            out.println("Wrote your high score into a local file!");
+
+        } catch (IOException _) {
         }
 
-        return map;
+        readHighScoresFromFile(highS);
+
     }
 
+    private void readHighScoresFromFile(File highS) {
+        Map<String, Integer> uniqueScores = new TreeMap<String, Integer>();
+        FileReader fileReader = null;
+        List<String> extractedData = new ArrayList<>();
+        try {
 
-    void retryGame(Scanner checker) throws IOException {
-        //MADD Colours = new MADD();
+            fileReader = new FileReader(highS);
+            try {
+                extractedData = fileReader.readAllLines();
+            } catch (IOException _) {
+            }
+        } catch (FileNotFoundException e) {
 
-        String ch = checker.next();
-        if(ch.equalsIgnoreCase("y")){
-            Player.initPlayer(checker);
+            out.println("File not found!");
         }
-        else if(ch.equalsIgnoreCase("n")) {
+        out.println(extractedData);
+        TreeSet<String> sortedByKeyDupeData = new TreeSet<>(extractedData);
+        out.println(sortedByKeyDupeData);
+        Object[] sortedByKeyUniqueDataInArray = sortedByKeyDupeData.stream().distinct().toArray();
+        out.println(Arrays.toString(sortedByKeyUniqueDataInArray));
+
+
+         //out.println(Arrays.toString(Arrays.stream(sortedByKeyUniqueDataInArray).mapToInt(x->Integer.parseInt(x.toString().replaceAll("[^0-9] ", ""))).toArray()));
+         out.println(Arrays.toString(Arrays.stream(sortedByKeyUniqueDataInArray).toArray()).replaceAll("[^0-9 ]",""));
+         // split  into array
+//        int i = 0;
+//        for(int x : intArray){
+//            out.println(i+ "\t" + x);
+//            i++;
+//        }
+
+
+    }
+
+    void retryGame() {
+        out.println("Would you like to try again?");
+        String ch = NormalizeStrings.normalize(reader);
+        if (ch.contains("y")) {
+            Life.main();
+        } else if (ch.contains("n")) {
             out.println("See ya!");
+            reader.close();
             exit(0);
         } else {
-            Colours.AnsiCodes.ANSI_RED.printCode();
-            out.println("Please type in only 1 character: Y or N");
+            ANSI_RED.printCode();
+            out.println("Please type in only Yes or No");
             Colours.clear();
-            retryGame(checker);
+            retryGame();
         }
     }
 }

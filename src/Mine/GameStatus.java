@@ -49,8 +49,11 @@ sealed interface GameStatus permits Life {
         int finalMoves = 0, movesLeft = STARTING_MOVES; //TODO make moves static and part of player class?
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
             var choice = normalize(reader);
+            if (movesLeft - totalMoves == 5) {
+                UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
+            }
             switch (PossibleMoves.checkInput(choice)) {
-                case FIGHT ->
+                case FIGHT -> // dont get a move for retreating
                         movesLeft += fightLogic(fight, player, reader, status);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET
 
                 case SLEEP -> sleep.action(player);
@@ -62,7 +65,6 @@ sealed interface GameStatus permits Life {
                     movesLeft--; // don't count towards the final score but still uses a move
                 }
                 case QUIT -> {
-                    // new Quit(null).action(player, reader); // care
                     quit.action(player, reader);
                     totalMoves--; // dont count towards total moves
                 }
@@ -76,23 +78,21 @@ sealed interface GameStatus permits Life {
                 //TODO: run the "status check" on a separate thread when main game loop is running
                 break;
             }
-            UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move
-            if (movesLeft - totalMoves == 5) {
-                UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
-            }
+            if(movesLeft - totalMoves != 0) UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move except the last one
             finalMoves = totalMoves; // set it after every move for the quit
         }
         finalMoves++;       // count the last move before death
         return finalMoves;
     }
 
-    static void endGame(Players player, int totalMoves) {
-        if (player.state() != EXIT_GAME) {
+    static int endGame(Players player, int totalMoves) {
+        if (player.state() != ALIVE & player.state() != EXIT_GAME & player.state() != RESET & player.state() != COWARD) { //mb make it so that if reset player = alive?
             ANSI_HIGH_INTENSITY.printCode();
             ANSI_RED.printCode();
             out.println("You died! Game over!");
             Colours.clear();
         }
         out.println("In total you've had " + totalMoves + " moves!");
+        return totalMoves;
     }
 }

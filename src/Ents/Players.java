@@ -1,6 +1,8 @@
 package Ents;
 
 
+import Acts.Actions;
+import Acts.Status;
 import Mine.Colours;
 
 import static Acts.RandomGenerator.randomize;
@@ -12,12 +14,12 @@ public final class Players implements Entities {
     private double foodP, waterP, energyP, healthP;
     private EntityState entityState;
     private final String pName;
-    private final double damage; // TODO: add lvl up system
+    private final double damage; //
 
     public Players(String pName, EntityState entityState, double foodP, double waterP, double energyP, double healthP) {
         this.entityState = entityState;
         this.pName = pName;
-        this.damage  = randomize (10, 10);
+        this.damage  = randomize (10.0, 10.0); // TODO: add lvl up system
         this.foodP = healthP;
         this.waterP = energyP;
         this.energyP = waterP;
@@ -42,16 +44,10 @@ public final class Players implements Entities {
     public EntityState deathCheck(Entities entity) {
         double meanWarning = ((this.food() + this.water() + entity.energy() + entity.health()) / 4);
         if (entity.food() < -10 || entity.water() < -10 || entity.energy() < -10 || entity.health() < -10) {
-            ANSI_HIGH_INTENSITY.printCode();
-            ANSI_RED.printCode();
-            out.printf("%sHP: %f\n%sEP: %f\n%sFP: %f\n%sWP: %f\n",
-                    ANSI_RED.colourCode(), entity.health(),
-                    ANSI_YELLOW.colourCode(), entity.energy(),
-                    ANSI_GREEN.colourCode(), entity.food(),
-                    ANSI_CYAN.colourCode(), entity.water());
+            new Status(entity); // now call the status action that handles its own logic
             Colours.clear();
             entity.setState(EntityState.DEAD);
-        } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless!
+        } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless right now! // TODO: put all data in a Tree and pick the lowest one to show the player which is the lowest
             out.printf("%n%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!%n",
                     ANSI_RED.colourCode(), ANSI_HIGH_INTENSITY.colourCode(), ANSI_RESET.colourCode());
             Colours.clear();

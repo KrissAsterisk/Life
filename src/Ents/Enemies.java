@@ -92,7 +92,7 @@ public final class Enemies implements Entities {
     }
 
     public EntityState deathCheck(Entities entity) {
-        if (entity.energy() <= 0 || entity.health() <= 0) {
+        if (entity.energy() < -10 || entity.health() <= 0) {
             entity.setState(EntityState.DEAD);
         } else {
             entity.setState(EntityState.ALIVE); // redundant but its ok

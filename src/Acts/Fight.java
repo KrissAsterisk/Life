@@ -7,7 +7,6 @@ import Mine.Constants;
 
 import java.util.Random;
 import java.util.Scanner;
-import java.util.function.Predicate;
 import java.util.Arrays;
 
 import static Acts.RandomGenerator.*;
@@ -86,14 +85,6 @@ public final class Fight implements Actions, FightLossMessages, Constants {
 
         String[] funnyHaha = FightLossMessages.getStrings();
         funnyHaha = Arrays.stream(funnyHaha).distinct().toArray(String[]::new); // this also removes duplicates but its a redundancy now
-//        String[] finalFunnyHaha = funnyHaha;
-//        var ref = new Object() {
-//            final BooleanSupplier test = () -> Arrays.toString(finalFunnyHaha).isEmpty();
-//        };
-//        out.println(ref.test.getAsBoolean())
-
-        //Predicate<String[]> doesArrayContainPunctuation = x -> Arrays.toString(x).contains(".");
-        //out.println(doesArrayContainPunctuation.test(funnyHaha));
 
         for (int i = 0; i < funnyHaha.length; i++) {
             int randomIndexToSwap = rand.nextInt(0, funnyHaha.length); // bound is exclusive

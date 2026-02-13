@@ -2,10 +2,14 @@ package Acts;
 
 import java.util.Random;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import java.util.function.ToDoubleBiFunction;
 
 public interface RandomGenerator {
-    Random rand = new Random(123);
+    static final long DEBUG_SEED = 69420L;
+    public static final Random rand = new Random(DEBUG_SEED);
+
+    Supplier<Double> roll01Double = Math::random;
 
 
     /**
@@ -24,6 +28,19 @@ public interface RandomGenerator {
 
 
     /**
+     * Rand nextInt
+     * @param origin
+     * @param bound
+     * @return 1 integer between the origin and bound
+     */
+    public static int randomize(int origin, int bound){
+        bound+=1;
+        BiFunction<Integer,Integer,Integer> roll = rand::nextInt;
+        return roll.apply(origin, bound);
+    }
+
+
+    /**
      * Generates a randomized double value by scaling a random number in the range [0, 1)
      * with the specified value to be randomized and adding a minimum desired result.
      *
@@ -34,7 +51,7 @@ public interface RandomGenerator {
      *         the calculated range.
      */
     public static double randomize(double valueToBeRandomized, double minimumDesiredResult ){
-        ToDoubleBiFunction<Double, Double> getRandDouble = (x, y) -> ((Math.random() * x) + y);
+        ToDoubleBiFunction<Double, Double> getRandDouble = (x, y) -> ((roll01Double.get() * x) + y);
         return getRandDouble.applyAsDouble(valueToBeRandomized, minimumDesiredResult);
     }
 

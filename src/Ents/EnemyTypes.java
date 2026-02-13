@@ -5,13 +5,14 @@ import Mine.NormalizeStrings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
+
+import static Acts.RandomGenerator.randomize;
 
 /**
  * Holds all possible types of enemies and their specific parameters
  */
 public enum EnemyTypes {
-    GOBLIN("Goblin", 0, 150, 50, 50, true, true, false),
+    GOBLIN("Goblin", 0, 150, 50, 15, true, true, false),
     DWARF("Dwarf", 1, 50, 100, 25, false, true, false),
     MONGREL("Mongrel", 2, 100, 1, 100, false, false, false),
     ASSASSIN("Assassin", 3, 25, 200, 30, false, true, false),
@@ -110,7 +111,7 @@ public enum EnemyTypes {
     }
 
     public static EnemyTypes randomizeEncounter() throws RuntimeException {
-        var randomVariable = new Random().nextInt(0, EnemyTypes.values().length);
+        var randomVariable = randomize(0, EnemyTypes.values().length);
         for (var enemy : EnemyTypes.values()) {
             if (randomVariable == enemy.position) {
                 return enemy;
