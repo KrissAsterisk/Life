@@ -1,9 +1,11 @@
 package Mine;
 
 
+import javax.print.DocFlavor;
 import java.io.*;
 import java.util.*;
-import java.util.stream.IntStream;
+import java.util.function.*;
+import java.util.Map.Entry;
 
 
 import static Mine.Colours.AnsiCodes.*;
@@ -28,12 +30,15 @@ class HighScores {
         File highS;
         FileWriter scores;
         highS = new File(Constants.highScoresFilePath);
+        highS.setWritable(true);
+
         try {
             if (!highS.exists()) {
                 if (!highS.createNewFile()) {
                     out.println("Failed to create file!");
                 }
             }
+            ;
             scores = new FileWriter(highS, true);
             scores.write(name + "'s highest number of moves achieved: " + finalMoves + "\n");
             scores.close();
@@ -46,8 +51,9 @@ class HighScores {
 
     }
 
+
     private void readHighScoresFromFile(File highS) {
-        Map<String, Integer> uniqueScores = new TreeMap<String, Integer>();
+        Map<String, Integer> uniqueScores = new LinkedHashMap<>();
         FileReader fileReader = null;
         List<String> extractedData = new ArrayList<>();
         try {
@@ -62,25 +68,60 @@ class HighScores {
             out.println("File not found!");
         }
         out.println(extractedData);
-        TreeSet<String> sortedByKeyDupeData = new TreeSet<>(extractedData);
-        out.println(sortedByKeyDupeData);
-        Object[] sortedByKeyUniqueDataInArray = sortedByKeyDupeData.stream().distinct().toArray();
-        out.println(Arrays.toString(sortedByKeyUniqueDataInArray));
+        int[] playerScores = extractedData.stream().distinct().mapToInt(x -> (Integer.parseInt(x.replaceAll("\\D+", "")))).toArray(); // this is how real men code
+        out.println(Arrays.toString(playerScores));
 
 
-         //out.println(Arrays.toString(Arrays.stream(sortedByKeyUniqueDataInArray).mapToInt(x->Integer.parseInt(x.toString().replaceAll("[^0-9] ", ""))).toArray()));
-         out.println(Arrays.toString(Arrays.stream(sortedByKeyUniqueDataInArray).toArray()).replaceAll("[^0-9 ]",""));
-         // split  into array
-//        int i = 0;
-//        for(int x : intArray){
-//            out.println(i+ "\t" + x);
-//            i++;
-//        }
+        Set<String> sorted = new LinkedHashSet<>(extractedData); // make sure names are unique - Case Sensitive on purpose!
+
+        Object[] playerNames = sorted.stream().map(x -> x.replaceAll("'s highest number of moves achieved: ", "") // replace flavour text
+                .replaceAll("\\d+", "")).toArray(); // replace all digits
+        out.println(Arrays.toString(playerNames));
+
+        // STEP 1: get name and score. set it.
+        // read from file again
+        // get new name and score and if the name is the same, check the score, replace only if its bigger than the one already set
+        // keep going until new name
+        // then if new name, repeat step 1
 
 
+        // NOTE:
+        // All numbers - order is crucial
+        // every number taken out of the list
+        // is directly related to the name its attached to
+        // e.g., 1st number = 1st name
+
+        // playerNames[0] & playerScores[0] is the correct players score
+        // need to iterate through whole names array to find the player Dupes and get their bigges move, then add it to the map
+
+        List<String> listName = new ArrayList<>();
+        for (Object name : playerNames) {
+            listName.add(name.toString());
+            uniqueScores.put(name.toString(), null);
+        }
+        List<Integer> listNum = new ArrayList<>();
+        for (int score : playerScores) {
+            listNum.add(score);
+        }
+
+        StringBuilder test = new StringBuilder();
+        for(int i = 0; i < playerNames.length; i++){
+
+            test.append(listName.get(i)).append(" ").append(listNum.get(i)).append("-");
+        }
+
+        String[] clipped = test.toString().split("-"); // now we have array with String + Nr together Ast 16
+        // we can do smth with this mb god save me
+        out.println(clipped[0]);
+
+        //out.println(uniqueScores);
     }
 
-    void retryGame() {
+    private void writeHighScoresToFile(File highS) {
+
+    } // make it so it reads from github or smth to get the up-to-date values of the actual HS list
+
+    void retryGame() { // move this somewhere else
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);
         if (ch.contains("y")) {
