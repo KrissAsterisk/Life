@@ -40,7 +40,7 @@ public final class Life implements UserInterface, Constants, GameStatus {
         var gameOverTime = Instant.now();
         out.println("You lasted: " + ANSI_HIGH_INTENSITY + (ChronoUnit.MINUTES.between(gameStartTime, gameOverTime)) + " minutes and " + (ChronoUnit.SECONDS.between(gameStartTime, gameOverTime)) + " seconds.");
         Colours.clear();
-        new HighScores(player.getName(), totalMoves); //TODO:fix the sorting
+        new HighScores(player.getName(), totalMoves);
         retryGame(reader);
     }
 }
