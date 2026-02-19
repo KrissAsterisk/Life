@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import java.util.function.ToDoubleBiFunction;
 
 public interface RandomGenerator {
-    static final long DEBUG_SEED = 69420L;
-    public static final Random rand = new Random(DEBUG_SEED);
+    static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1; // 1 random inst per session is ok, but this does let you "retryGame" and predict the seed to absolute accuracy
+    public static final Random rand = new Random(RANDOM_SEED);
 
     Supplier<Double> roll01Double = Math::random;
 

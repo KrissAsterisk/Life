@@ -14,9 +14,10 @@ public final class Players implements Entities {
     private double foodP, waterP, energyP, healthP;
     private EntityState entityState;
     private final String pName;
-    private final double damage; //
+    private double damage; // uses xp to increase maxDmg
+    private float xp;
 
-    public Players(String pName, EntityState entityState, double foodP, double waterP, double energyP, double healthP) {
+    public Players(String pName, EntityState entityState, double foodP, double waterP, double energyP, double healthP, float xp) {
         this.entityState = entityState;
         this.pName = pName;
         this.damage  = randomize (10.0, 10.0); // TODO: add lvl up system
@@ -24,6 +25,7 @@ public final class Players implements Entities {
         this.waterP = energyP;
         this.energyP = waterP;
         this.healthP = foodP;
+        this.xp = xp;
     }
 
     public void update(double foodP, double waterP, double energyP, double healthP) {
@@ -41,6 +43,14 @@ public final class Players implements Entities {
         this.energyP += energyP;
     }
 
+    public void updateDamage(double damage) {
+        this.damage += damage;
+    }
+
+    public void updateXP(float xp){
+        this.xp += xp;
+    }
+
     public EntityState deathCheck(Entities entity) {
         double meanWarning = ((this.food() + this.water() + entity.energy() + entity.health()) / 4);
         if (entity.food() < -10 || entity.water() < -10 || entity.energy() < -10 || entity.health() < -10) {
@@ -49,7 +59,7 @@ public final class Players implements Entities {
             entity.setState(EntityState.DEAD);
         } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless right now! // TODO: put all data in a Tree and pick the lowest one to show the player which is the lowest
             out.printf("%n%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!%n",
-                    ANSI_RED.colourCode(), ANSI_HIGH_INTENSITY.colourCode(), ANSI_RESET.colourCode());
+                    ANSI_RED, ANSI_HIGH_INTENSITY, ANSI_RESET);
             Colours.clear();
 
             entity.setState(EntityState.ALIVE); // redundant but its ok
@@ -88,5 +98,7 @@ public final class Players implements Entities {
     public double health() {
         return healthP;
     }
+
+    public float xp() {return xp;}
 
 }

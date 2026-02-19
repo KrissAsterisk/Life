@@ -22,7 +22,7 @@ public sealed interface Colours permits MADD { // actually this is package acces
         ANSI_BLUE("\u001B[34m"), ANSI_RED("\u001B[31m"), ANSI_GREEN("\u001B[32m"), ANSI_YELLOW("\u001B[33m"), ANSI_CYAN("\u001B[36m"),
         ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ;
 
-        public String colourCode(){
+        public String toString(){
             return code;
         }
         public void printCode(){

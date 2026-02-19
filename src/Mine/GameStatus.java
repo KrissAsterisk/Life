@@ -10,6 +10,7 @@ import static Ents.EntityState.*;
 import static Mine.Colours.AnsiCodes.*;
 import static Mine.Constants.*;
 import static Mine.NormalizeStrings.normalize;
+import static java.lang.System.exit;
 import static java.lang.System.out;
 import static Ents.EnemyTypes.*;
 
@@ -41,6 +42,17 @@ sealed interface GameStatus permits Life {
     }
 
 
+    static void playerLevelUp(Players player){
+        if(player.xp() >= 100){
+            while (player.xp() >= 100){
+                player.updateXP(-100);
+                out.println("Congratulations, you have leveled up!");
+                player.updateDamage(RandomGenerator.randomize(1, 5));
+                out.println("Your damage has increased by" +  player.damage() + "as a result");
+            }
+        }
+    }
+
     static int startGame(Scanner reader, Players player) {
         MADD madd = new MADD();
         Actions sleep = Sleep::new, status = Status::new, eat = Eat::new, drink = Drink::new; // method references
@@ -48,6 +60,7 @@ sealed interface GameStatus permits Life {
         Fight fight = new Fight();
         int finalMoves = 0, movesLeft = STARTING_MOVES; //TODO make moves static and part of player class?
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
+            playerLevelUp(player);
             var choice = normalize(reader);
             if (movesLeft - totalMoves == 5) {
                 UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
@@ -94,5 +107,22 @@ sealed interface GameStatus permits Life {
         }
         out.println("In total you've had " + totalMoves + " moves!");
         return totalMoves;
+    }
+
+    static void retryGame(Scanner reader) { // move this somewhere else
+        out.println("Would you like to try again?");
+        String ch = NormalizeStrings.normalize(reader);
+        if (ch.contains("y")) {
+            Life.main();
+        } else if (ch.contains("n")) {
+            out.println("See ya!");
+            reader.close();
+            exit(0);
+        } else {
+            ANSI_RED.printCode();
+            out.println("Please type in only Yes or No");
+            Colours.clear();
+            retryGame(reader);
+        }
     }
 }

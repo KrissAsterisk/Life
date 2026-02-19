@@ -17,4 +17,5 @@ public sealed interface Entities permits Enemies, Players {
     void updateEnergy(double energyP);
     void setState(EntityState state);
 
+    void updateXP(float xp);
 }

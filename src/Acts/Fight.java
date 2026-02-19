@@ -8,6 +8,7 @@ import Mine.Constants;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import static Acts.RandomGenerator.*;
 import static Ents.EntityState.*;
@@ -18,6 +19,7 @@ import static java.lang.System.out;
 
 public final class Fight implements Actions, FightLossMessages, Constants {
     private final static double MIN_ENERGY_COST = 10;
+    private final static short MAX_XP_GAIN = 15;
 
 
     public void attack(Entities player, Entities enemy, Scanner reader, Actions status) {
@@ -31,7 +33,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
             out.println("What is your next move?");
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
             switch (checkInput(normalize(reader))) {
-                case ATTACK -> { // TODO use constants for some of these
+                case ATTACK -> {
                     player.updateEnergy(-randomize(6.21, MIN_ENERGY_COST));
                     if (player.deathCheck(player) == DEAD) break LOOP; // break instantly
                     enemy.updateHealth(-player.damage());
@@ -50,7 +52,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                 case FLEE -> {
                     enemy.setState(DEAD);
                     player.setState(COWARD);
-                    out.println(ANSI_RED.colourCode() + "You coward.");
+                    out.println(ANSI_RED + "You coward.");
                     Colours.clear();
                     break LOOP;
                 }
@@ -77,14 +79,20 @@ public final class Fight implements Actions, FightLossMessages, Constants {
             }
         } while (player.state() != DEAD & enemy.state() != DEAD);
 
-        if (player.state() != DEAD & player.state() != COWARD) player.setState(FIGHT_WIN);
+        if (player.state() != DEAD & player.state() != COWARD){ // win the fight if still alive
+            player.setState(FIGHT_WIN);
+            player.updateXP((float) randomize(10.0, 10.0)); // in this case, since we are * by 10, it can generate from 0.000000000 to 9.99999999
+        }
     }
+
+
+
+
 
     //prints a random generate sentence
     public void action(Entities entity) {
 
         String[] funnyHaha = FightLossMessages.getStrings();
-        funnyHaha = Arrays.stream(funnyHaha).distinct().toArray(String[]::new); // this also removes duplicates but its a redundancy now
 
         for (int i = 0; i < funnyHaha.length; i++) {
             int randomIndexToSwap = rand.nextInt(0, funnyHaha.length); // bound is exclusive
@@ -96,13 +104,15 @@ public final class Fight implements Actions, FightLossMessages, Constants {
         ANSI_RED.printCode();
         ANSI_HIGH_INTENSITY.printCode();
 
-        int newArrayLength = (new Random().nextInt(1, funnyHaha.length / 5 + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
+        int newArrayLength = (new Random().nextInt(1, (randomize(2, funnyHaha.length)) + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
         for (int i = 0; i < newArrayLength; i++) {
             funnyHaha[i] = funnyHaha[i].trim().replaceAll("[^\\w]", "").replaceAll(" ", ""); // remove all non-word chars aka . ! /  ...
             // had to replace all spaces with blanks since we're adding them ourselves
             if (i == 0) {
                 if (!funnyHaha[i].isEmpty())
-                    out.print(funnyHaha[i] = funnyHaha[i].replaceFirst(funnyHaha[i].substring(0, 1), funnyHaha[i].toUpperCase().substring(0, 1))); // this looks great :)
+                    out.print(funnyHaha[i] = funnyHaha[i].replaceFirst(
+                            funnyHaha[i].substring(0, 1),
+                            funnyHaha[i].toUpperCase().substring(0, 1))); // this looks great :)
                 // the above is so that the 1st letter is always Upper
                 // also checks that it isnt empty
             } else {

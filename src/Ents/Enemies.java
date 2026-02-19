@@ -77,12 +77,10 @@ public final class Enemies implements Entities {
         this.energyP += energyP;
 
     }
-
     public void updateHealth(double healthP) {
         this.healthP += healthP;
 
     }
-
     public void updateEnergy(double energyP) {
         this.energyP += energyP;
     }
@@ -90,6 +88,8 @@ public final class Enemies implements Entities {
     public void setState(EntityState state) {
         this.entityState = state;
     }
+
+    public void updateXP(float xp) {}
 
     public EntityState deathCheck(Entities entity) {
         if (entity.energy() < -10 || entity.health() <= 0) {
