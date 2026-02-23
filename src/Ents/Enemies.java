@@ -1,12 +1,6 @@
 package Ents;
 
-import Mine.Colours;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static Acts.RandomGenerator.randomize;
-import static Mine.Colours.AnsiCodes.*;
 import static java.lang.System.out;
 
 public final class Enemies implements Entities {
@@ -26,7 +20,7 @@ public final class Enemies implements Entities {
 //        this.damage = damage;
 //    }
 
-    public Enemies(String name) {
+    public void printEnemyName(String name) {
         out.println("A new " + name + " appears!");
     }
 
@@ -37,7 +31,7 @@ public final class Enemies implements Entities {
         this.energyP = Double.parseDouble(tempArray[2].toString());
         this.damage = randomize(Double.parseDouble(tempArray[3].toString()), Double.parseDouble(tempArray[3].toString())); // randomizes enemy damage when ran & if mathrandom rolls 0, its minDamage will be used; this is kinda bad since well never really be able to know its data at runtime
         this.entityState = EntityState.ALIVE;
-        this(tempArray[0].toString());
+        printEnemyName(name);
     }
 
     public double damage() {

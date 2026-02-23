@@ -35,3 +35,9 @@ asr's highest number of moves achieved: 1
 asrt's highest number of moves achieved: 1
 asry's highest number of moves achieved: 1
 asr's highest number of moves achieved: 1
+ASr's highest number of moves achieved: 1
+yes's highest number of moves achieved: 2
+yes's highest number of moves achieved: 1
+yes's highest number of moves achieved: 12
+ast's highest number of moves achieved: 1
+ASt's highest number of moves achieved: 1

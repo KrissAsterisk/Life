@@ -3,6 +3,7 @@ package Mine;
 import Acts.*;
 import Ents.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -15,6 +16,7 @@ import static java.lang.System.out;
 import static Ents.EnemyTypes.*;
 
 sealed interface GameStatus permits Life {
+
     private static int fightLogic(Fight fight, Players player, Scanner reader, Actions status) {
         Enemies enemy; // declare enemy in bigger scope so it can be reassigned in the try catch block
         try {
@@ -109,7 +111,7 @@ sealed interface GameStatus permits Life {
         return totalMoves;
     }
 
-    static void retryGame(Scanner reader) { // move this somewhere else
+    static void retryGame(Scanner reader) throws IOException { // move this somewhere else
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);
         if (ch.contains("y")) {

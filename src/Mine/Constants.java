@@ -10,6 +10,7 @@ import static java.lang.System.out;
 
 public interface Constants {
     public int STARTING_MOVES = 50;
+    public String DEFAULT_NAME = "BOZO";
     final double VULNERABILITY_DEBUFF = 2.25;
     final static String highScoresFilePath = "Highscores.txt";
     public static final Consumer<Entities> printHealth = entity -> out.printf("%sHP: %f%n", ANSI_RED, entity.health());

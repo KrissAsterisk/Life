@@ -4,21 +4,26 @@ import Acts.RandomGenerator;
 import Ents.Players;
 
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+
+import java.util.Locale;
 import java.util.Scanner;
+
 
 import static Mine.Colours.AnsiCodes.*;
 import static java.lang.System.*;
 import static Mine.GameStatus.*;
 
 
-public final class Life implements UserInterface, Constants, GameStatus {
+public final class Life implements UserInterface, Constants, GameStatus{
+    public static void main() throws IOException {
 
 
-    public static void main(){
-
+        Locale locale = Locale.getDefault();
+        System.out.println(locale);
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
         Player firstPlayer = Player.initPlayer(reader);
@@ -31,6 +36,7 @@ public final class Life implements UserInterface, Constants, GameStatus {
                 firstPlayer.healthP(),
                 firstPlayer.xp()
         );
+        out.println("Every action costs a move. Use them wisely!");
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         out.println("Current seed: " + RandomGenerator.RANDOM_SEED);

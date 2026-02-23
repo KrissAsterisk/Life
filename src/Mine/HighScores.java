@@ -1,7 +1,10 @@
 package Mine;
 
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 import static Mine.Colours.AnsiCodes.*;
@@ -20,11 +23,11 @@ class HighScores {
         writeHighScoreToFile();
     }
 
-    private void writeHighScoreToFile() {
+    private void writeHighScoreToFile(){
         File highS;
         FileWriter scores;
         highS = new File(Constants.highScoresFilePath);
-        highS.setWritable(true);
+        assert highS.setWritable(true);
 
         try {
             if (!highS.exists()) {
@@ -38,7 +41,8 @@ class HighScores {
             scores.close();
             out.println("Wrote your high score into a local file!");
 
-        } catch (IOException _) {
+        } catch (IOException unnamedVar) {
+
         }
 
         readHighScoresFromFile(highS);
@@ -48,18 +52,13 @@ class HighScores {
 
     private void readHighScoresFromFile(File highS) {
         Map<String, Integer> uniqueScores = new LinkedHashMap<>();
-        FileReader fileReader = null;
         List<String> extractedData = new ArrayList<>();
-        try {
-
-            fileReader = new FileReader(highS);
-            try {
-                extractedData = fileReader.readAllLines();
-            } catch (IOException _) {
-            }
-        } catch (FileNotFoundException e) {
+        try (var fileReader = new FileReader(highS)){
+            extractedData = fileReader.readAllLines();
+        } catch (IOException e) {
 
             out.println("File not found!");
+
         }
         ArrayList<Integer> playerScores = extractedData.stream()
                 //.peek(out::println)
@@ -117,7 +116,6 @@ class HighScores {
     private void writeHighScoresToFile(File highS, List<?> entries) {
         String getStringBack = entries.toString();
         getStringBack = getStringBack.replaceAll("=", "'s highest number of moves achieved: ").replace("[", "").replace("]", "");
-        out.println(getStringBack);
         ArrayList<String> cool = new ArrayList<>(List.of(getStringBack.split(", ")));
     } // make it so it reads from github or smth to get the up-to-date values of the actual HS list
 

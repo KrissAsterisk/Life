@@ -1,14 +1,12 @@
 package Acts;
 
-import Ents.*;
+import Ents.Entities;
 import Mine.Colours;
 import Mine.Constants;
 
 
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 import static Acts.RandomGenerator.*;
 import static Ents.EntityState.*;
@@ -104,7 +102,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
         ANSI_RED.printCode();
         ANSI_HIGH_INTENSITY.printCode();
 
-        int newArrayLength = (new Random().nextInt(1, (randomize(2, funnyHaha.length)) + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
+        int newArrayLength = (new Random().nextInt(1, (randomize(2, funnyHaha.length/5)) + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
         for (int i = 0; i < newArrayLength; i++) {
             funnyHaha[i] = funnyHaha[i].trim().replaceAll("[^\\w]", "").replaceAll(" ", ""); // remove all non-word chars aka . ! /  ...
             // had to replace all spaces with blanks since we're adding them ourselves
