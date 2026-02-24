@@ -19,24 +19,12 @@ import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.*;
 
 
-public final class Life implements UserInterface, Mine.Constants{
+public final class Life implements UserInterface, Mine.Constants {
     public static void main() throws IOException {
-
-
-        Locale locale = Locale.getDefault();
-        System.out.println(locale);
+        System.out.println(Locale.getDefault());
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
-        PlayerTemplate firstPlayer = PlayerTemplate.initPlayer(reader);
-        var player = new Players(
-                firstPlayer.name(),
-                firstPlayer.currentState(),
-                firstPlayer.foodP(),
-                firstPlayer.waterP(),
-                firstPlayer.energyP(),
-                firstPlayer.healthP(),
-                firstPlayer.xp()
-        );
+        var player = new Players(PlayerTemplate.initPlayer(reader));
         out.println("Every action costs a move. Use them wisely!");
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();

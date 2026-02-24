@@ -1,4 +1,4 @@
-package Acts;
+package Acts.PlayerActions;
 
 import entity.types.Players.Players;
 import Shareables.Colours;

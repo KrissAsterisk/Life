@@ -25,12 +25,13 @@ public interface FightLossMessages {
         loss.add(" You're fired . ");
         loss.add(" A light flashes before your eyes ! Oh wait it's just your google glasses ... ");
         loss.add(" You trip on a VERY large rock . ");
+        loss.add(" You stepped onto a LEGO brick .");
 
 
         Set<String> words = new LinkedHashSet<>(); // unique words only
 
         for (String word : loss.toString().toLowerCase().trim().split("\\s+")) { // avoid dupes
-            if (!word.isBlank()) words.add(word); // make sure were only adding words
+            if (!word.isBlank()) words.add(word.replaceAll(" ", "")); // make sure were only adding words
         }
 
         return words.toArray(String[]::new);

@@ -1,7 +1,6 @@
 package Mine;
 
 import Shareables.Colours;
-import Shareables.MADD;
 
 import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.out;
@@ -13,7 +12,7 @@ interface UserInterface {
                 "\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
     }
 
-    static void lowMovesWarning(MADD madd, int movesLeft, int totalMoves){
+    static void lowMovesWarning(int movesLeft, int totalMoves){ // this is a work of art
         out.printf("%s%s+----------------------+%s\n%s%s|      %s %s%sWARNING!%s %s      |%s\n%s%s|You have 5 moves left!|%s\n%s%s+----------------------+%s%n",
                 Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW, ANSI_RESET,
                 Colours.ANSI_BLACK_BACKGROUND, ANSI_YELLOW,

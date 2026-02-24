@@ -1,5 +1,8 @@
-package Acts;
+package Acts.PlayerActions;
 
+import Acts.Actions;
+import Acts.Constants;
+import Acts.FightLossMessages;
 import entity.types.Entities;
 import Shareables.Colours;
 
@@ -15,10 +18,6 @@ import static Shareables.NormalizeStrings.normalize;
 import static java.lang.System.out;
 
 public final class Fight implements Actions, FightLossMessages, Constants {
-    private final static double MIN_ENERGY_COST = 10;
-    private final static short MAX_XP_GAIN = 15;
-
-
     public void attack(Entities player, Entities enemy, Scanner reader, Actions status) {
 //        if(new Enemies((EnemyTypes.randomized(new Random().nextInt(0, EnemyTypes.values().length)))).getName().equals("Goblin")){ // Jesus Christ
 //            new Goblin(); // this belongs in a museum
@@ -26,15 +25,20 @@ public final class Fight implements Actions, FightLossMessages, Constants {
         player.setState(RESET); // reset vulnerable
         LOOP:
         do {
-            status.action(enemy);
+            status.action(enemy); // show enemy stats
             out.println("What is your next move?");
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
             switch (checkInput(normalize(reader))) {
                 case ATTACK -> {
-                    player.updateEnergy(-randomize(6.21, MIN_ENERGY_COST));
-                    if (player.deathCheck(player) == DEAD) break LOOP; // break instantly
-                    enemy.updateHealth(-player.damage());
-                    if (enemy.deathCheck(enemy) == DEAD) break LOOP;
+                    player.updateEnergy(-randomize(rand.nextDouble(5.2364), MIN_ENERGY_COST)); // lose a pseudorandom amount of energy
+                    if (player.deathCheck() == DEAD) break LOOP; // break instantly
+                    if (!getXinY(1, 30)) { // if 1 in 30, enemy dodges
+                        enemy.updateHealth(-player.damage());
+                    } else {
+                        out.println("You... missed.");
+                    }
+
+                    if (enemy.deathCheck() == DEAD) break LOOP;
                 }
                 case DODGE -> {
                     if ((getXinY(1, 10))) { //TODO: combine with level up
@@ -44,7 +48,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                         out.println("Uh Oh....");
                         player.setState(VULNERABLE);
                     }
-                    if (enemy.deathCheck(enemy) == DEAD) break LOOP;
+                    if (enemy.deathCheck() == DEAD) break LOOP;
                 }
                 case FLEE -> {
                     enemy.setState(DEAD);
@@ -59,34 +63,32 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                 }
             } //    0 - 1 double values     <- // ->
             // Math.random() < (enemy.energy() / (enemy.energy() + ENERGY_COST))
-            if (( !(enemy.state() == DEAD) && Math.random() < (enemy.energy() / (enemy.energy() + MIN_ENERGY_COST)) )| enemy.energy() >= 200.0) { // idea is so that the more energy an enemy has, the more likely they are to move
-                out.println("The " + enemy.getName() + " attacks for "+ enemy.damage() + " damage!\n");
-                enemy.updateEnergy(-randomize(5.2364, MIN_ENERGY_COST));
+            if (enemyCanAct(enemy)) {
+                out.println("The " + enemy.getName() + " attacks for " + enemy.damage() + " damage!");
+                enemy.updateEnergy(-randomize(rand.nextDouble(5.2364), MIN_ENERGY_COST));
                 if (!(getXinY(1, 20))) { // 1 in 20 to dodge
-                    if(player.state() == VULNERABLE){
-                        player.updateHealth(-(enemy.damage()*VULNERABILITY_DEBUFF));// punishment for missing dodge
-                        if(player.deathCheck(player) == DEAD){ break LOOP;}
-                    }
-                    else player.updateHealth(-enemy.damage()); // TODO: maybe put death check in update methods? passing reference now?
+                    if (player.state() == VULNERABLE) {
+                        player.updateHealth(-(enemy.damage() * VULNERABILITY_DEBUFF));// punishment for missing dodge // instead of callng update health, maybe have a method called attack() that calls update health instead?
+                        out.println("The enemy strikes a CRITICAL HIT for " + enemy.damage() * VULNERABILITY_DEBUFF + " damage!");
+                        if (player.deathCheck() == DEAD) {
+                            break LOOP;
+                        }
+                    } else player.updateHealth(-enemy.damage()); // TODO: maybe put death check in update methods? passing reference now?
 
                     action(player); // print funny loss msg
                 } else out.println("You managed to dodge in the nick of time!");
-                player.deathCheck(player);
-                enemy.deathCheck(player);
+                player.deathCheck();
+                enemy.deathCheck();
             }
         } while (player.state() != DEAD & enemy.state() != DEAD);
 
-        if (player.state() != DEAD & player.state() != COWARD){ // win the fight if still alive
+        if (player.state() != DEAD & player.state() != COWARD) { // win the fight if still alive
             player.setState(FIGHT_WIN);
-            player.updateXP((float) randomize(10.0, 10.0)); // in this case, since we are * by 10, it can generate from 0.000000000 to 9.99999999
+            player.updateXP((float) randomize(rand.nextFloat(10), MIN_XP_GAIN)); // in this case, since we are * by 10 at least 10, it can generate from 0.000000000 to 9.99999999
         }
     }
 
-
-
-
-
-    //prints a random generate sentence
+    //prints a randomly generated sentence
     public void action(Entities entity) {
 
         String[] funnyHaha = FightLossMessages.getStrings();
@@ -101,7 +103,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
         ANSI_RED.printCode();
         ANSI_HIGH_INTENSITY.printCode();
 
-        int newArrayLength = (new Random().nextInt(1, (randomize(2, funnyHaha.length/5)) + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
+        int newArrayLength = (new Random().nextInt(1, (randomize(2, funnyHaha.length / 5)) + 1)); // random sentence size, funnyHaha for some reason is tiny, exception thrown, so use its own size
         for (int i = 0; i < newArrayLength; i++) {
             funnyHaha[i] = funnyHaha[i].trim().replaceAll("[^\\w]", "").replaceAll(" ", ""); // remove all non-word chars aka . ! /  ...
             // had to replace all spaces with blanks since we're adding them ourselves
@@ -120,6 +122,10 @@ public final class Fight implements Actions, FightLossMessages, Constants {
         } // end sentences with .
         out.print(".\n"); // set with !, ?, !! enums with rand
         Colours.clear();
+    }
+
+    private boolean enemyCanAct(Entities enemy) { // idea is so that the more energy an enemy has, the more likely they are to move
+        return ((!(enemy.state() == DEAD)) && Math.random() < (enemy.energy() / (enemy.energy() + MIN_ENERGY_COST))) | enemy.energy() >= IGNORE_ENERGY_RESTRICTIONS;
     }
 }
 

@@ -4,6 +4,9 @@ package entity.types.Enemies;
 import Shareables.EntityState;
 import entity.types.Entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static Shareables.RandomGenerator.randomize;
 import static java.lang.System.out;
 
@@ -42,8 +45,8 @@ public final class Enemies implements Entities {
         return damage;
     }
 
-    public Object[] getAll(){
-        return new Object[]{name, entityState, healthP, energyP, damage};
+    public ArrayList<Object> getAll(){
+        return new ArrayList<>(List.of(name, entityState, healthP, energyP, damage));
     }
 
     public String getName() {
@@ -89,12 +92,12 @@ public final class Enemies implements Entities {
 
     public void updateXP(float xp) {}
 
-    public EntityState deathCheck(Entities entity) {
-        if (entity.energy() < -10 || entity.health() <= 0) {
-            entity.setState(EntityState.DEAD);
+    public EntityState deathCheck() {
+        if (this.energyP < -10 || this.healthP <= 0) {
+            this.entityState = EntityState.DEAD;
         } else {
-            entity.setState(EntityState.ALIVE); // redundant but its ok
+            this.entityState = EntityState.ALIVE; // redundant but its ok
         }
-        return entity.state();
+        return this.entityState;
     }
 }

@@ -2,6 +2,7 @@ package Mine;
 
 import Acts.*;
 
+import Acts.PlayerActions.*;
 import entity.types.Enemies.Enemies;
 
 
@@ -9,7 +10,6 @@ import entity.types.Players.Players;
 import Shareables.*;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import static Shareables.Colours.AnsiCodes.*;
@@ -21,22 +21,29 @@ import static java.lang.System.*;
 
 interface GameStatus { // this interface is WAY too important - needs to be split up
 
-    private static int fightLogic(Fight fight, Players player, Scanner reader, Actions status) {
+    private static int fightLogic(Fight fight, Players player, Scanner reader, Actions status) { // refactor this
         Enemies enemy; // declare enemy in bigger scope so it can be reassigned in the try catch block
         try {
             enemy = new Enemies(randomizeEncounter()); // returns an enemy type
         } catch (RuntimeException e) {
             out.println("Failed generating enemy, using default");
-            enemy = new Enemies(getEnemyRarity(type -> type.isDefault).getFirst()); // overloaded func, if you pass it just the boolean to look for, it will return the 1st available bool
+            enemy = new Enemies(getEnemyRarity(enemyTypes -> enemyTypes.isDefault).getFirst()); // overloaded func, if you pass it just the boolean to look for, it will return the 1st available bool
         }
-        out.println(getEnemyData(type -> type.maxHealth, enemy) + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match -- maybe use this to check matches against players?
-        if (getEnemyRarity(type -> type.isRare, enemy))
+/**
+ *      these methods here were used to understand functional interfaces - they dont really achieve much, since most ops can be done by the classes themselves
+ */
+        var checkHealthType = getEnemyData(enemyTypes -> enemyTypes.maxHealth, enemy); // TODO: make it so it expected a pred or func
+        if(checkHealthType.isPresent()) out.println(checkHealthType.get() + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match -- maybe use this to check matches against players?
+        else out.println("Type not found. How did you pull that off?");
+        if (getEnemyRarity(enemyTypes -> enemyTypes.isRare, enemy))
             out.println(enemy.getName() + " is Rare!");// look for any rare enemyTypes and see if the new generated one is Rare or not based on its declaration in the Enum;
-        if (getEnemyRarity(type -> !type.isRare, enemy))
+        if (getEnemyRarity(enemyTypes -> enemyTypes.isCommon, enemy))
             out.println(enemy.getName() + " is Common!");
-        if (Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray()) != null) { //useless until we can use keys later on
-            out.println(Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray())); // prints all possible values for the type specified
-        }
+
+
+//        if (Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray()) != null) { //useless until we can use keys later on
+//            out.println(Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray())); // prints all possible values for the type specified
+//        }
 
         fight.attack(player, enemy, reader, status);
         if (player.state() == FIGHT_WIN) {
@@ -48,28 +55,16 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
     }
 
 
-    static void playerLevelUp(Players player){
-        if(player.xp() >= 100){
-            while (player.xp() >= 100){
-                player.updateXP(-100);
-                out.println("Congratulations, you have leveled up!");
-                player.updateDamage(RandomGenerator.randomize(1, 5));
-                out.println("Your damage has increased by" +  player.damage() + "as a result");
-            }
-        }
-    }
-
     static int startGame(Scanner reader, Players player) {
-        MADD madd = new MADD();
         Actions sleep = Sleep::new, status = Status::new, eat = Eat::new, drink = Drink::new; // method references
         Quit quit = new Quit();
         Fight fight = new Fight();
         int finalMoves = 0, movesLeft = STARTING_MOVES; //TODO make moves static and part of player class?
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
-            playerLevelUp(player);
+            player.levelUpCheck(player);
             var choice = normalize(reader);
             if (movesLeft - totalMoves == 5) {
-                UserInterface.lowMovesWarning(madd, movesLeft, totalMoves);
+                UserInterface.lowMovesWarning(movesLeft, totalMoves);
             }
             switch (PossibleMoves.checkInput(choice)) {
                 case FIGHT -> // dont get a move for retreating
@@ -119,7 +114,7 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);
         if (ch.contains("y")) {
-            Life.main();
+            Life.main(); // TODO: care
         } else if (ch.contains("n")) {
             out.println("See ya!");
             reader.close();

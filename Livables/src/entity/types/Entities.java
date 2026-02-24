@@ -14,7 +14,7 @@ public sealed interface Entities permits Enemies, Players {
     double damage();
 
     EntityState state();
-    abstract EntityState deathCheck(Entities entity);
+    abstract EntityState deathCheck();
 
     void update(double foodP, double waterP, double energyP, double healthP);
     void updateHealth(double healthP);

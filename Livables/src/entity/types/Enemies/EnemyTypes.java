@@ -4,8 +4,7 @@ package entity.types.Enemies;
 import entity.types.CheckTrait;
 import entity.types.GetNumber;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 import static Shareables.RandomGenerator.randomize;
 
@@ -41,14 +40,15 @@ public enum EnemyTypes {
 
     /**
      * Checks every value in the EnemyTypes enum for a desired match
+     *
      * @param checker Functional Interface reference for lambda use!
-     * @param enemy The enemy object created whenever the player decides to fight
+     * @param enemy   The enemy object created whenever the player decides to fight
      * @return True if the new enemy generated has the boolean passed by lambda. Returns false otherwise.
      */
     public static boolean getEnemyRarity(CheckTrait checker, Enemies enemy) {
         for (var enemyType : EnemyTypes.values()) { // for every type in the enum
             if (checker.checkTrait(enemyType)) { // check for the desired boolean - declared in the interface
-                if(enemyType.namedEnemy.equals(enemy.getName())){
+                if (enemyType.namedEnemy.equals(enemy.getName())) {
                     return true;
                 }
             }
@@ -81,30 +81,42 @@ public enum EnemyTypes {
      *                  associated with each EnemyTypes. Used for comparison logic.
      * @param enemy     The enemy object whose corresponding EnemyTypes needs to be identified.
      * @return The EnemyTypes that matches the provided enemy object based on name
-     *         and numerical data. Returns null if no match is found.
+     * and numerical data. Returns null if no match is found.
      */
-    public static EnemyTypes getEnemyData(GetNumber getNumber, Enemies enemy){
+    public static Optional<EnemyTypes> getEnemyData(GetNumber getNumber, Enemies enemy) {
         var allEnemyData = enemy.getAll(); // get all Object[] values from the enemy, health, name, etc...
-        var enemyName = enemy.getName();
 
-        for(var enemyType: EnemyTypes.values()){
-            var anyEnemyTypeNumber = getNumber.getNumbers(enemyType);// looks for Number[]; gets all possible numbers available in enemyType
-            if(Arrays.toString(allEnemyData).contains((anyEnemyTypeNumber.toString()))) { // if the created enemy in main contains the number name declared by our lambda
-                if(enemyName.equals(enemyType.namedEnemy)) return enemyType; // if the name of the match, corresponds to that of the current enemy object return its type.
-            }
+        var matchingList = Arrays.stream(EnemyTypes.values()) // this checks if the name from enemy exists within EnemyTypes enum
+                .filter(enemyTypes -> allEnemyData.stream()
+                        .anyMatch(x -> x.toString().contains(enemyTypes.namedEnemy)))
+                .collect(
+                        ArrayList::new,
+                        List::add,
+                        List::addAll);
+
+        var anyEnemyTypeNumber = getNumber.getNumbers((EnemyTypes) matchingList.getFirst());
+
+        if (allEnemyData.contains(anyEnemyTypeNumber)) { // if the number specified, like maxHealth, exists within this enemy, return the enemy.
+            return Optional.ofNullable((EnemyTypes) matchingList.getFirst());
         }
-        return null;
+//      id say the commented code is better;
+//        for(var enemyType: EnemyTypes.values()){
+//            var anyEnemyTypeNumber = getNumber.getNumbers(enemyType);// looks for Number[]; gets all possible numbers available in enemyType
+//            if(allEnemyData.contains((anyEnemyTypeNumber.toString()))) { // if the created enemy in main contains the number name declared by our lambda
+//                if(enemyName.equals(enemyType.namedEnemy)) return enemyType; // if the name of the match, corresponds to that of the current enemy object return its type.
+//            }
+//        }
+        return Optional.empty();
     }
 
-    public static ArrayList<Number> getEnemyData(GetNumber getNumber){ // TODO keys + values for better referencing and use
+    public static ArrayList<Number> getEnemyData(GetNumber getNumber) { // TODO keys + values for better referencing and use
         var soughtTypes = new ArrayList<Number>();
-        for(var enemyType : EnemyTypes.values()){
+        for (var enemyType : EnemyTypes.values()) {
             soughtTypes.add(getNumber.getNumbers(enemyType));
             //for example ->t.maxEnergy => all enums that have maxEnergy
         }
         return soughtTypes;
     }
-
 
 
     public Object[] getData() {

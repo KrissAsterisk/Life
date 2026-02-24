@@ -11,7 +11,6 @@ public interface RandomGenerator {
 
     Supplier<Double> roll01Double = Math::random;
 
-
     /**
      * Generates a random integer between the specified origin (inclusive) and bound (inclusive),
      * then checks if the generated value equals 1.
