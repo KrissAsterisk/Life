@@ -1,6 +1,9 @@
 package Mine;
 
-import static Mine.Colours.AnsiCodes.*;
+import Shareables.Colours;
+import Shareables.MADD;
+
+import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.out;
 import static java.lang.Thread.sleep;
 

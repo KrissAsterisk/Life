@@ -1,7 +1,9 @@
 package Mine;
 
-import Acts.RandomGenerator;
-import Ents.Players;
+import entity.types.Players.PlayerTemplate;
+import entity.types.Players.Players;
+import Shareables.Colours;
+import Shareables.RandomGenerator;
 
 
 import java.io.IOException;
@@ -13,12 +15,11 @@ import java.util.Locale;
 import java.util.Scanner;
 
 
-import static Mine.Colours.AnsiCodes.*;
+import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.*;
-import static Mine.GameStatus.*;
 
 
-public final class Life implements UserInterface, Constants, GameStatus{
+public final class Life implements UserInterface, Mine.Constants{
     public static void main() throws IOException {
 
 
@@ -26,7 +27,7 @@ public final class Life implements UserInterface, Constants, GameStatus{
         System.out.println(locale);
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
-        Player firstPlayer = Player.initPlayer(reader);
+        PlayerTemplate firstPlayer = PlayerTemplate.initPlayer(reader);
         var player = new Players(
                 firstPlayer.name(),
                 firstPlayer.currentState(),
@@ -40,13 +41,13 @@ public final class Life implements UserInterface, Constants, GameStatus{
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         out.println("Current seed: " + RandomGenerator.RANDOM_SEED);
-        var totalMoves = endGame(player,
-                startGame(reader, player)
+        var totalMoves = GameStatus.endGame(player,
+                GameStatus.startGame(reader, player)
         ); // start the game
         var gameOverTime = Instant.now();
         out.println("You lasted: " + ANSI_HIGH_INTENSITY + (ChronoUnit.MINUTES.between(gameStartTime, gameOverTime)) + " minutes and " + (ChronoUnit.SECONDS.between(gameStartTime, gameOverTime)) + " seconds.");
         Colours.clear();
         new HighScores(player.getName(), totalMoves);
-        retryGame(reader);
+        GameStatus.retryGame(reader);
     }
 }

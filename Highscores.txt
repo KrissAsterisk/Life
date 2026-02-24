@@ -41,3 +41,5 @@ yes's highest number of moves achieved: 1
 yes's highest number of moves achieved: 12
 ast's highest number of moves achieved: 1
 ASt's highest number of moves achieved: 1
+Ast's highest number of moves achieved: 1
+newName's highest number of moves achieved: 1

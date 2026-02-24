@@ -1,13 +1,16 @@
 package Mine;
 
 
+import Shareables.Colours;
+
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
-import static Mine.Colours.AnsiCodes.*;
+import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.*;
 
 

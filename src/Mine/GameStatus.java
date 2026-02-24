@@ -1,21 +1,25 @@
 package Mine;
 
 import Acts.*;
-import Ents.*;
+
+import entity.types.Enemies.Enemies;
+
+
+import entity.types.Players.Players;
+import Shareables.*;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static Ents.EntityState.*;
-import static Mine.Colours.AnsiCodes.*;
+import static Shareables.Colours.AnsiCodes.*;
 import static Mine.Constants.*;
-import static Mine.NormalizeStrings.normalize;
-import static java.lang.System.exit;
-import static java.lang.System.out;
-import static Ents.EnemyTypes.*;
+import static Shareables.NormalizeStrings.normalize;
+import static Shareables.EntityState.*;
+import static entity.types.Enemies.EnemyTypes.*;
+import static java.lang.System.*;
 
-sealed interface GameStatus permits Life {
+interface GameStatus { // this interface is WAY too important - needs to be split up
 
     private static int fightLogic(Fight fight, Players player, Scanner reader, Actions status) {
         Enemies enemy; // declare enemy in bigger scope so it can be reassigned in the try catch block
@@ -25,7 +29,7 @@ sealed interface GameStatus permits Life {
             out.println("Failed generating enemy, using default");
             enemy = new Enemies(getEnemyRarity(type -> type.isDefault).getFirst()); // overloaded func, if you pass it just the boolean to look for, it will return the 1st available bool
         }
-        out.println(getEnemyData(type -> type.maxHealth, enemy) + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match
+        out.println(getEnemyData(type -> type.maxHealth, enemy) + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match -- maybe use this to check matches against players?
         if (getEnemyRarity(type -> type.isRare, enemy))
             out.println(enemy.getName() + " is Rare!");// look for any rare enemyTypes and see if the new generated one is Rare or not based on its declaration in the Enum;
         if (getEnemyRarity(type -> !type.isRare, enemy))
