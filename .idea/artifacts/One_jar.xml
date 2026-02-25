@@ -6,6 +6,7 @@
       <element id="module-output" name="Shared" />
       <element id="module-output" name="Livables" />
       <element id="module-output" name="Actions" />
+      <element id="module-output" name="FileHandling" />
     </root>
   </artifact>
 </component>

@@ -1,7 +1,6 @@
-package Mine;
+package HandlingScores;
 
-
-import Shareables.Colours;
+import Shareables.Colours.AnsiCodes;
 
 
 import java.io.FileReader;
@@ -10,11 +9,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
-import static Shareables.Colours.AnsiCodes.*;
+import static HandlingScores.Constants.*;
 import static java.lang.System.*;
+import static Shareables.Colours.clear;
 
 
-class HighScores {
+public class HighScores {
 
     private final String name;
     private final int finalMoves;
@@ -26,10 +26,10 @@ class HighScores {
         writeHighScoreToFile();
     }
 
-    private void writeHighScoreToFile(){
+    private void writeHighScoreToFile() {
         File highS;
         FileWriter scores;
-        highS = new File(Constants.highScoresFilePath);
+        highS = new File(highScoresFilePath);
         assert highS.setWritable(true);
 
         try {
@@ -56,7 +56,7 @@ class HighScores {
     private void readHighScoresFromFile(File highS) {
         Map<String, Integer> uniqueScores = new LinkedHashMap<>();
         List<String> extractedData = new ArrayList<>();
-        try (var fileReader = new FileReader(highS)){
+        try (var fileReader = new FileReader(highS)) {
             extractedData = fileReader.readAllLines();
         } catch (IOException e) {
 
@@ -97,11 +97,11 @@ class HighScores {
         uniqueScores.values().parallelStream()
                 .mapToInt(x -> x)
                 .average() // starting Optional chain
-                .ifPresent(x -> out.println("Average Moves per player: " + ANSI_HIGH_INTENSITY + ANSI_CYAN + x + ANSI_RESET)
+                .ifPresent(x -> out.println("Average Moves per player: " + AnsiCodes.ANSI_HIGH_INTENSITY + AnsiCodes.ANSI_CYAN + x + AnsiCodes.ANSI_RESET)
                 );
         //future proofing for when we instantiate high scores before the game is played
 
-        out.println(ANSI_YELLOW + "Sorting..." + ANSI_RESET);
+        out.println(AnsiCodes.ANSI_YELLOW + "Sorting..." + AnsiCodes.ANSI_RESET);
 
         List<Map.Entry<String, Integer>> entries = new ArrayList<>(uniqueScores.entrySet()); // put into a list using Map.Entry
 
@@ -109,9 +109,9 @@ class HighScores {
 
         out.println(entries); // big nr first
 
-        out.println("Highest scoring legend: " + ANSI_HIGH_INTENSITY + ANSI_RED + entries.getFirst().getKey() + ANSI_RESET + "!");
+        out.println("Highest scoring legend: " + AnsiCodes.ANSI_HIGH_INTENSITY + AnsiCodes.ANSI_RED + entries.getFirst().getKey() + AnsiCodes.ANSI_RESET + "!");
 
-        Colours.clear();
+        clear();
 
         writeHighScoresToFile(highS, entries);
     }
@@ -120,6 +120,20 @@ class HighScores {
         String getStringBack = entries.toString();
         getStringBack = getStringBack.replaceAll("=", "'s highest number of moves achieved: ").replace("[", "").replace("]", "");
         ArrayList<String> cool = new ArrayList<>(List.of(getStringBack.split(", ")));
-    } // make it so it reads from github or smth to get the up-to-date values of the actual HS list
+        try (var fileWriter = new FileWriter(sortedHighScoresPath)) {
+            cool.forEach(x -> {
+                try {
+                    fileWriter.write(x + "\n");
+                } catch (IOException e) {
+                    e.getCause();
+                    throw new RuntimeException(e);
+                }
+            });
+            out.println("Wrote sorted scores to file!");
+        } catch (IOException e) {
+            e.getCause();
+            throw new RuntimeException(e);
+        }
 
+    } // make it so it reads from github or smth to get the up-to-date values of the actual HS list
 }

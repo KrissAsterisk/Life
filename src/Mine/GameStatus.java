@@ -110,7 +110,7 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
         return totalMoves;
     }
 
-    static void retryGame(Scanner reader) throws IOException { // move this somewhere else
+    static void retryGame(Scanner reader) throws Exception{ // move this somewhere else
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);
         if (ch.contains("y")) {

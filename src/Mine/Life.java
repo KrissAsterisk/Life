@@ -4,9 +4,10 @@ import entity.types.Players.PlayerTemplate;
 import entity.types.Players.Players;
 import Shareables.Colours;
 import Shareables.RandomGenerator;
+import HandlingScores.HighScores;
 
 
-import java.io.IOException;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -20,7 +21,7 @@ import static java.lang.System.*;
 
 
 public final class Life implements UserInterface, Mine.Constants {
-    public static void main() throws IOException {
+    public static void main() throws Exception {
         System.out.println(Locale.getDefault());
         Colours.clear(); // initialize enum
         var reader = new Scanner(in);
@@ -37,5 +38,6 @@ public final class Life implements UserInterface, Mine.Constants {
         Colours.clear();
         new HighScores(player.getName(), totalMoves);
         GameStatus.retryGame(reader);
+
     }
 }

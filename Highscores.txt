@@ -58,3 +58,13 @@ yes's highest number of moves achieved: 1
 As's highest number of moves achieved: 2
 as's highest number of moves achieved: 1
 ast's highest number of moves achieved: 1
+Ast's highest number of moves achieved: 1
+ASr's highest number of moves achieved: 1
+AS's highest number of moves achieved: 1
+ASr's highest number of moves achieved: 7
+Asr's highest number of moves achieved: 2
+asr's highest number of moves achieved: 3
+Asr's highest number of moves achieved: 10
+Asr's highest number of moves achieved: 1
+as's highest number of moves achieved: 2
+ay's highest number of moves achieved: 1
