@@ -1,4 +1,4 @@
-package Acts;
+package Acts.GeneralActions;
 
 import entity.types.Entities;
 import entity.types.Players.Players;

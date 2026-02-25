@@ -5,7 +5,6 @@ import static java.lang.System.out;
 public interface Colours { // actually this is package access abstract
     String ANSI_BLACK = "\u001B[30m";
     String ANSI_BLUE = "\u001B[34m";
-    String ANSI_PURPLE = "\u001B[35m";
     String ANSI_WHITE = "\u001B[37m";
     String ANSI_BLACK_BACKGROUND = "\u001B[40m";
     String ANSI_RED_BACKGROUND = "\u001B[41m";
@@ -20,7 +19,7 @@ public interface Colours { // actually this is package access abstract
     enum AnsiCodes{
         ANSI_RESET("\u001B[0m"){}, //
         ANSI_BLUE("\u001B[34m"), ANSI_RED("\u001B[31m"), ANSI_GREEN("\u001B[32m"), ANSI_YELLOW("\u001B[33m"), ANSI_CYAN("\u001B[36m"),
-        ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ;
+        ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ANSI_PURPLE("\u001B[35m");
 
         public String toString(){
             return code;

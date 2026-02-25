@@ -2,6 +2,7 @@ package Mine;
 
 import Acts.*;
 
+import Acts.GeneralActions.Status;
 import Acts.PlayerActions.*;
 import entity.types.Enemies.Enemies;
 
@@ -9,7 +10,6 @@ import entity.types.Enemies.Enemies;
 import entity.types.Players.Players;
 import Shareables.*;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import static Shareables.Colours.AnsiCodes.*;

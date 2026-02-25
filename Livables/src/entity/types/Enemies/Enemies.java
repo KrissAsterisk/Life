@@ -66,6 +66,8 @@ public final class Enemies implements Entities {
         return 0;
     }
 
+    public byte level() { return 0; } // TODO: could have some effects depending on rarity?
+
     public double health() {
         return healthP;
     }
@@ -91,7 +93,7 @@ public final class Enemies implements Entities {
         this.entityState = state;
     }
 
-    public void updateXP(float xp) {}
+    public float updateXP(float xp) { return 0;}
 
     public EntityState deathCheck() {
         if (this.energyP < -10 || this.healthP <= 0) {

@@ -2,6 +2,8 @@ package Acts.PlayerActions;
 
 import Acts.Actions;
 import Acts.Constants;
+import Acts.GeneralActions.Attack;
+import Acts.Consumption.EnergyUsage;
 import Acts.FightLossMessages;
 import entity.types.Entities;
 import Shareables.Colours;
@@ -30,27 +32,21 @@ public final class Fight implements Actions, FightLossMessages, Constants {
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
             switch (checkInput(normalize(reader))) {
                 case ATTACK -> {
-                    player.updateEnergy(-randomize(rand.nextDouble(5.2364), MIN_ENERGY_COST)); // lose a pseudorandom amount of energy
-                    if (player.deathCheck() == DEAD) break LOOP; // break instantly
-                    if (!getXinY(1, 30)) { // if 1 in 30, enemy dodges
-                        enemy.updateHealth(-player.damage());
-                    } else {
-                        out.println("You... missed.");
-                    }
-
-                    if (enemy.deathCheck() == DEAD) break LOOP;
+                    if(new EnergyUsage(player).useEnergy() == DEAD) break LOOP; // do energy check before attack
+                    if (!getXinY(1, 50)) { // if 1 in 50, enemy dodges
+                        if (new Attack().action(player, enemy) == DEAD) break LOOP; // if enemy dies, get out
+                    } else {out.println("You... missed.");}
                 }
                 case DODGE -> {
-                    if ((getXinY(1, 10))) { //TODO: combine with level up
+                    if ((getXinY(player.level(), 10))) { // the higher the players level the higher the chance to dodge
                         out.println("You gracefully dodge and the " + enemy.getName() + " hits itself!");
-                        enemy.updateHealth(-enemy.damage());
+                        if (new Attack().action(enemy, enemy) == DEAD) break LOOP; // doesnt use energy
                     } else {
                         out.println("Uh Oh....");
                         player.setState(VULNERABLE);
                     }
-                    if (enemy.deathCheck() == DEAD) break LOOP;
                 }
-                case FLEE -> {
+                case FLEE -> { // TODO: make this cooler?
                     enemy.setState(DEAD);
                     player.setState(COWARD);
                     out.println(ANSI_RED + "You coward.");
@@ -61,30 +57,24 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                     System.out.println("You trip on a rock!");
                     player.updateHealth(-5);
                 }
-            } //    0 - 1 double values     <- // ->
-            // Math.random() < (enemy.energy() / (enemy.energy() + ENERGY_COST))
+            }
             if (enemyCanAct(enemy)) {
-                out.println("The " + enemy.getName() + " attacks for " + enemy.damage() + " damage!");
-                enemy.updateEnergy(-randomize(rand.nextDouble(5.2364), MIN_ENERGY_COST));
-                if (!(getXinY(1, 20))) { // 1 in 20 to dodge
+               // new EnergyUsage(enemy).useEnergy();  - this lets the enemy still get a hit in if theyre out of energy if theyll die
+                if (!(getXinY(player.level(), 20))) { // 1 in 20 to dodge for player
                     if (player.state() == VULNERABLE) {
-                        player.updateHealth(-(enemy.damage() * VULNERABILITY_DEBUFF));// punishment for missing dodge // instead of callng update health, maybe have a method called attack() that calls update health instead?
-                        out.println("The enemy strikes a CRITICAL HIT for " + enemy.damage() * VULNERABILITY_DEBUFF + " damage!");
-                        if (player.deathCheck() == DEAD) {
-                            break LOOP;
-                        }
-                    } else player.updateHealth(-enemy.damage()); // TODO: maybe put death check in update methods? passing reference now?
-
+                        if (new Attack(enemy).action(enemy, VULNERABILITY_DEBUFF, player) == DEAD) break LOOP; // attack then check for death
+                    } else {
+                        new Attack(enemy).action(enemy, player);
+                    }
                     action(player); // print funny loss msg
                 } else out.println("You managed to dodge in the nick of time!");
-                player.deathCheck();
-                enemy.deathCheck();
             }
+
         } while (player.state() != DEAD & enemy.state() != DEAD);
 
         if (player.state() != DEAD & player.state() != COWARD) { // win the fight if still alive
             player.setState(FIGHT_WIN);
-            player.updateXP((float) randomize(rand.nextFloat(10), MIN_XP_GAIN)); // in this case, since we are * by 10 at least 10, it can generate from 0.000000000 to 9.99999999
+            out.printf("You've gained "+ player.updateXP((float) randomize(rand.nextFloat(10), MIN_XP_GAIN)) +" XP!");
         }
     }
 

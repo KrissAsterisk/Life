@@ -17,7 +17,8 @@ public interface Constants {
     Consumer<Entities> printEnergy = entity -> out.printf("%sEP: %f%n", ANSI_YELLOW, entity.energy());
     Consumer<Entities> printWater = entity -> out.printf("%sWP: %f%n", ANSI_CYAN, entity.water());
     Consumer<Entities> printFood = entity -> out.printf("%sFP: %f%n", ANSI_GREEN, entity.food());
-    Consumer<Entities> printPlayerStatus = entity -> printHealth.andThen(printEnergy).andThen(printWater).andThen(printFood).accept(entity);
+    Consumer<Entities> printLevel = entity -> out.printf("%sLevel: %d%n", ANSI_PURPLE, entity.level());
+    Consumer<Entities> printPlayerStatus = entity -> printLevel.andThen(printHealth).andThen(printEnergy).andThen(printWater).andThen(printFood).accept(entity);
     Consumer<Entities> printEnemyStatus = entity -> printHealth.andThen(printEnergy).accept(entity);
 
 

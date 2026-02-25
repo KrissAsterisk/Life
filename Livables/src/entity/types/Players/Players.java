@@ -6,10 +6,6 @@ import Shareables.EntityState;
 
 
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import static Shareables.RandomGenerator.rand;
@@ -17,7 +13,7 @@ import static entity.types.Constants.*;
 import static Shareables.RandomGenerator.randomize;
 import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.out;
-import static java.util.Collections.min;
+
 
 public final class Players implements Entities {
 
@@ -26,6 +22,7 @@ public final class Players implements Entities {
     private final String pName;
     private double damage; // uses xp to increase maxDmg
     private float xp;
+    private byte level;
 
     public Players(PlayerTemplate playerTemplate) {
         this.entityState = playerTemplate.currentState();
@@ -36,6 +33,7 @@ public final class Players implements Entities {
         this.energyP = playerTemplate.energyP();
         this.healthP = playerTemplate.healthP();
         this.xp = playerTemplate.xp();
+        this.level = playerTemplate.level();
     }
 
     public void update(double foodP, double waterP, double energyP, double healthP) {
@@ -53,12 +51,14 @@ public final class Players implements Entities {
         this.energyP += energyP;
     }
 
-    public void updateDamage(double damage) {
+    public double updateDamage(double damage) {
         this.damage += damage;
+        return damage;
     }
 
-    public void updateXP(float xp) {
+    public float updateXP(float xp) {
         this.xp += xp;
+        return xp;
     }
 
     public EntityState deathCheck() {
@@ -99,8 +99,10 @@ public final class Players implements Entities {
     public void levelUpCheck(Players player) {
         if (player.xp() >= LEVEL_UP_THRESHOLD) {
             player.updateXP(-LEVEL_UP_THRESHOLD);
-            player.updateDamage(randomize(rand.nextDouble(1), MAX_DAMAGE_GAIN)); // at most 5 extra damage
-
+            var dmgGained = player.updateDamage(randomize(rand.nextDouble(1), MAX_DAMAGE_GAIN));// at most 10 extra damage
+            level++;
+            out.println("You've just leveled up and gained "+ ANSI_RED + dmgGained +" extra damage!");
+            Colours.clear();
         }
     }
 
@@ -110,6 +112,10 @@ public final class Players implements Entities {
 
     public double damage() {
         return damage;
+    }
+
+    public byte level(){
+        return level;
     }
 
     public String getName() {
