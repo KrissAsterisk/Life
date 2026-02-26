@@ -1,25 +1,27 @@
 package Acts.PlayerActions;
 
 import Acts.Actions;
-import entity.types.Entities;
+import entity.types.Players.Players;
 
 import static Shareables.RandomGenerator.rand;
 import static Shareables.RandomGenerator.randomize;
 
 public final class Drink implements Actions {
 
-    public Drink(Entities entities) {
-        action(entities);
+    private final Players player;
+
+    public Drink(Players player) {
+        this.player = player;
     }
 
-    public void action(Entities entity){
+    public void execute(){
 
-        entity.update(
+        player.update(
                 1 * (randomize(rand.nextDouble(3.7),0.5)),
                 1 * (randomize(rand.nextDouble(26.757), 14.543)),
                 -1 * (randomize(rand.nextDouble(7.27), 5.23)),
                 1 * (randomize(rand.nextDouble(3.9), 2.1))
         );
-        entity.deathCheck();
+        player.deathCheck();
     }
 }

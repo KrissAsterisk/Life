@@ -83,12 +83,12 @@ public enum EnemyTypes {
      * @return The EnemyTypes that matches the provided enemy object based on name
      * and numerical data. Returns null if no match is found.
      */
-    public static Optional<EnemyTypes> getEnemyData(GetNumber getNumber, Enemies enemy) {
+    public static Optional<Map<EnemyTypes, Number>> getNumericEnemyData(GetNumber getNumber, Enemies enemy) {
         var allEnemyData = enemy.getAll(); // get all Object[] values from the enemy, health, name, etc...
 
         var matchingList = Arrays.stream(EnemyTypes.values()) // this checks if the name from enemy exists within EnemyTypes enum
                 .filter(enemyTypes -> allEnemyData.stream()
-                        .anyMatch(x -> x.toString().contains(enemyTypes.namedEnemy)))
+                        .anyMatch(x -> x.toString().contains(enemyTypes.namedEnemy))) // any enemy whose name is the same any in the enum
                 .collect(
                         ArrayList::new,
                         List::add,
@@ -96,35 +96,27 @@ public enum EnemyTypes {
 
         var anyEnemyTypeNumber = getNumber.getNumbers((EnemyTypes) matchingList.getFirst());
 
-        if (allEnemyData.contains(anyEnemyTypeNumber)) { // if the number specified, like maxHealth, exists within this enemy, return the enemy.
-            return Optional.ofNullable((EnemyTypes) matchingList.getFirst());
+        if (allEnemyData.contains(anyEnemyTypeNumber)) {// if the number specified, like maxHealth, exists within this enemy, return the enemy.
+            return Optional.of(Map.of((EnemyTypes) matchingList.getFirst(), anyEnemyTypeNumber));
         }
-//      id say the commented code is better;
+
+        return Optional.empty();
+    }
+
+    //      id say the commented code is better;
 //        for(var enemyType: EnemyTypes.values()){
 //            var anyEnemyTypeNumber = getNumber.getNumbers(enemyType);// looks for Number[]; gets all possible numbers available in enemyType
 //            if(allEnemyData.contains((anyEnemyTypeNumber.toString()))) { // if the created enemy in main contains the number name declared by our lambda
 //                if(enemyName.equals(enemyType.namedEnemy)) return enemyType; // if the name of the match, corresponds to that of the current enemy object return its type.
 //            }
 //        }
-        return Optional.empty();
-    }
 
-    public static ArrayList<Number> getEnemyData(GetNumber getNumber) { // TODO keys + values for better referencing and use
-        var soughtTypes = new ArrayList<Number>();
-        for (var enemyType : EnemyTypes.values()) {
-            soughtTypes.add(getNumber.getNumbers(enemyType));
-            //for example ->t.maxEnergy => all enums that have maxEnergy
-        }
-        return soughtTypes;
-    }
-
-
-    public Object[] getData() {
+    public Object[] getData() { //TODO: remake this
         return new Object[]{namedEnemy, maxHealth, maxEnergy, minDamage};
     }
 
     public static EnemyTypes randomizeEncounter() throws RuntimeException {
-        var randomVariable = randomize(0, EnemyTypes.values().length);
+        var randomVariable = randomize(0, EnemyTypes.values().length); // in this specific scenario, the inclusive triggers an IndexOutOfBoundsException! which is great - makes the default enemy more common (which is what I want)
         for (var enemy : EnemyTypes.values()) {
             if (randomVariable == enemy.position) {
                 return enemy;

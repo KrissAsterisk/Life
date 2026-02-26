@@ -19,7 +19,7 @@ public interface Colours { // actually this is package access abstract
     enum AnsiCodes{
         ANSI_RESET("\u001B[0m"){}, //
         ANSI_BLUE("\u001B[34m"), ANSI_RED("\u001B[31m"), ANSI_GREEN("\u001B[32m"), ANSI_YELLOW("\u001B[33m"), ANSI_CYAN("\u001B[36m"),
-        ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ANSI_PURPLE("\u001B[35m");
+        ANSI_HIGH_INTENSITY("\u001B[1m"), ANSI_LOW_INTENSITY("\u001B[2m"), ANSI_PURPLE("\u001B[35m"), ANSI_CLEAR("\u001b[3J\u001b[2J\u001b[H");
 
         public String toString(){
             return code;

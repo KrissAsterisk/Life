@@ -1,26 +1,22 @@
 package entity.types;
 
 import entity.types.Enemies.Enemies;
-import entity.types.Players.Players;
 import Shareables.EntityState;
+import entity.types.Players.Players;
 
-public sealed interface Entities permits Enemies, Players {
+public sealed interface Entities permits Players, Enemies, HasLevels,  Survivor {
     String getName();
 
-    double food(); // TODO: not all entities need to have food & water parms
-    double water();
     double energy();
     double health();
     double damage();
-    byte level();
-
     EntityState state();
-    abstract EntityState deathCheck();
+    EntityState deathCheck();
 
-    void update(double foodP, double waterP, double energyP, double healthP);
+
     void updateHealth(double healthP);
     void updateEnergy(double energyP);
     void setState(EntityState state);
 
-    float updateXP(float xp);
+
 }

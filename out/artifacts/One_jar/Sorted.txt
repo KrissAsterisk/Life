@@ -1,3 +1,7 @@
+ast's highest number of moves achieved: 47
 Asterisk's highest number of moves achieved: 17
 Kra's highest number of moves achieved: 6
-ast's highest number of moves achieved: 1
+yes's highest number of moves achieved: 3
+y's highest number of moves achieved: 3
+yesd's highest number of moves achieved: 2
+Ast's highest number of moves achieved: 1

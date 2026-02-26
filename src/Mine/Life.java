@@ -12,8 +12,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 
+
 import java.util.Locale;
 import java.util.Scanner;
+
 
 
 import static Shareables.Colours.AnsiCodes.*;
@@ -21,12 +23,27 @@ import static java.lang.System.*;
 
 
 public final class Life implements UserInterface, Mine.Constants {
-    public static void main() throws Exception {
-        System.out.println(Locale.getDefault());
+
+    //TODO LIST:
+    //Refactor Status first
+    //Replace getClass() branching with presenter/polymorphism. This is localized and improves design immediately.
+    //Split interfaces (Entities → smaller ones)
+    //Update method signatures in actions to accept what they actually need (e.g., Combatant).
+    //Remove side effects from constructors
+    //Make actions explicit execute methods.
+    //Add GameContext & GameIO
+    //Gradually thread it through, starting at entry points.
+    //Fix enemy identity & randomness
+    //Add type field and make stat generation explicit.
+
+    public static void main() {
         Colours.clear(); // initialize enum
+        out.print(ANSI_CLEAR);
+        out.flush();
+        System.out.println(Locale.getDefault());
         var reader = new Scanner(in);
         var player = new Players(PlayerTemplate.initPlayer(reader));
-        out.println("Every action costs a move. Use them wisely!");
+        out.println("Every execute costs a move. Use them wisely!");
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         out.println("Current seed: " + RandomGenerator.RANDOM_SEED);

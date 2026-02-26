@@ -12,7 +12,7 @@ import static java.lang.System.out;
 public final class Quit{
 
 
-    public void action(Players player, Scanner reader){
+    public void execute(Players player, Scanner reader){
 
         out.println("You've chosen to quit the game. Are you sure? (Y/N)");
         String b = reader.nextLine();
@@ -26,7 +26,7 @@ public final class Quit{
             ANSI_RED.printCode();
             out.println("Please input only 1 character. (Y/N)");
             Colours.clear();
-            action(player, reader); // come back to this method
+            execute(player, reader); // come back to this method
         }
     }
 }

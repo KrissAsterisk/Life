@@ -3,4 +3,5 @@ module One {
     requires Shared;
     requires Livables;
     requires FileHandling;
+    requires java.management;
 }

@@ -1,8 +1,10 @@
 package entity.types.Players;
 
-import entity.types.Entities;
 import Shareables.Colours;
 import Shareables.EntityState;
+import entity.types.Entities;
+import entity.types.HasLevels;
+import entity.types.Survivor;
 
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.out;
 
 
-public final class Players implements Entities {
+public final class Players implements Entities, Survivor, HasLevels {
 
     private double foodP, waterP, energyP, healthP;
     private EntityState entityState;

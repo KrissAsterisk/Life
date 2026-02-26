@@ -5,8 +5,11 @@ import Acts.Constants;
 import Acts.GeneralActions.Attack;
 import Acts.Consumption.EnergyUsage;
 import Acts.FightLossMessages;
+import Acts.GeneralActions.Status;
+import entity.types.Enemies.Enemies;
 import entity.types.Entities;
 import Shareables.Colours;
+import entity.types.Players.Players;
 
 
 import java.util.Random;
@@ -20,27 +23,29 @@ import static Shareables.NormalizeStrings.normalize;
 import static java.lang.System.out;
 
 public final class Fight implements Actions, FightLossMessages, Constants {
-    public void attack(Entities player, Entities enemy, Scanner reader, Actions status) {
+    public void attack(Players player, Enemies enemy, Scanner reader) {
 //        if(new Enemies((EnemyTypes.randomized(new Random().nextInt(0, EnemyTypes.values().length)))).getName().equals("Goblin")){ // Jesus Christ
 //            new Goblin(); // this belongs in a museum
 //        }
-        player.setState(RESET); // reset vulnerable
+
+        player.setState(RESET);// reset vulnerable
+
         LOOP:
         do {
-            status.action(enemy); // show enemy stats
+            new Status(enemy).execute(); // show enemy stats
             out.println("What is your next move?");
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
             switch (checkInput(normalize(reader))) {
                 case ATTACK -> {
                     if(new EnergyUsage(player).useEnergy() == DEAD) break LOOP; // do energy check before attack
                     if (!getXinY(1, 50)) { // if 1 in 50, enemy dodges
-                        if (new Attack().action(player, enemy) == DEAD) break LOOP; // if enemy dies, get out
+                        if (new Attack().execute(player, enemy) == DEAD) break LOOP; // if enemy dies, get out
                     } else {out.println("You... missed.");}
                 }
                 case DODGE -> {
                     if ((getXinY(player.level(), 10))) { // the higher the players level the higher the chance to dodge
                         out.println("You gracefully dodge and the " + enemy.getName() + " hits itself!");
-                        if (new Attack().action(enemy, enemy) == DEAD) break LOOP; // doesnt use energy
+                        if (new Attack().execute(enemy, enemy) == DEAD) break LOOP; // doesnt use energy
                     } else {
                         out.println("Uh Oh....");
                         player.setState(VULNERABLE);
@@ -62,11 +67,11 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                // new EnergyUsage(enemy).useEnergy();  - this lets the enemy still get a hit in if theyre out of energy if theyll die
                 if (!(getXinY(player.level(), 20))) { // 1 in 20 to dodge for player
                     if (player.state() == VULNERABLE) {
-                        if (new Attack(enemy).action(enemy, VULNERABILITY_DEBUFF, player) == DEAD) break LOOP; // attack then check for death
+                        if (new Attack(enemy).execute(enemy, VULNERABILITY_DEBUFF, player) == DEAD) break LOOP; // attack then check for death
                     } else {
-                        new Attack(enemy).action(enemy, player);
+                        new Attack(enemy).execute(enemy, player);
                     }
-                    action(player); // print funny loss msg
+                    execute(); // print funny loss msg
                 } else out.println("You managed to dodge in the nick of time!");
             }
 
@@ -79,7 +84,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
     }
 
     //prints a randomly generated sentence
-    public void action(Entities entity) {
+    public void execute() {
 
         String[] funnyHaha = FightLossMessages.getStrings();
 

@@ -33,11 +33,11 @@ public final class Enemies implements Entities {
     }
 
     public Enemies(EnemyTypes type) {
-        Object[] tempArray = type.getData();
-        this.name = tempArray[0].toString();
-        this.healthP = Double.parseDouble(tempArray[1].toString());
-        this.energyP = Double.parseDouble(tempArray[2].toString());
-        this.damage = randomize(rand.nextDouble(10), Double.parseDouble(tempArray[3].toString())); // randomizes enemy damage when ran & if mathrandom rolls 0, its minDamage will be used; this is kinda bad since well never really be able to know its data at runtime
+        Object[] dataArray = type.getData();
+        this.name = dataArray[0].toString();
+        this.healthP = Double.parseDouble(dataArray[1].toString());
+        this.energyP = Double.parseDouble(dataArray[2].toString());
+        this.damage = randomize(rand.nextDouble(10), Double.parseDouble(dataArray[3].toString())); // randomizes enemy damage when ran & if mathrandom rolls 0, its minDamage will be used; this is kinda bad since well never really be able to know its data at runtime
         this.entityState = EntityState.ALIVE;
         printEnemyName(name);
     }

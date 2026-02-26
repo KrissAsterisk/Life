@@ -4,62 +4,31 @@ import Acts.*;
 
 import Acts.GeneralActions.Status;
 import Acts.PlayerActions.*;
-import entity.types.Enemies.Enemies;
-
 
 import entity.types.Players.Players;
 import Shareables.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static Shareables.Colours.AnsiCodes.*;
 import static Mine.Constants.*;
 import static Shareables.NormalizeStrings.normalize;
 import static Shareables.EntityState.*;
-import static entity.types.Enemies.EnemyTypes.*;
 import static java.lang.System.*;
 
-interface GameStatus { // this interface is WAY too important - needs to be split up
-
-    private static int fightLogic(Fight fight, Players player, Scanner reader, Actions status) { // refactor this
-        Enemies enemy; // declare enemy in bigger scope so it can be reassigned in the try catch block
-        try {
-            enemy = new Enemies(randomizeEncounter()); // returns an enemy type
-        } catch (RuntimeException e) {
-            out.println("Failed generating enemy, using default");
-            enemy = new Enemies(getEnemyRarity(enemyTypes -> enemyTypes.isDefault).getFirst()); // overloaded func, if you pass it just the boolean to look for, it will return the 1st available bool
-        }
-/**
- *      these methods here were used to understand functional interfaces - they dont really achieve much, since most ops can be done by the classes themselves
- */
-        var checkHealthType = getEnemyData(enemyTypes -> enemyTypes.maxHealth, enemy); // TODO: make it so it expected a pred or func
-        if(checkHealthType.isPresent()) out.println(checkHealthType.get() + " found. It contains MaxHealth."); // checks if any values in an enemy, match that of energy from the enums and checks if the found matches names also match -- maybe use this to check matches against players?
-        else out.println("Type not found. How did you pull that off?");
-        if (getEnemyRarity(enemyTypes -> enemyTypes.isRare, enemy))
-            out.println(enemy.getName() + " is Rare!");// look for any rare enemyTypes and see if the new generated one is Rare or not based on its declaration in the Enum;
-        if (getEnemyRarity(enemyTypes -> enemyTypes.isCommon, enemy))
-            out.println(enemy.getName() + " is Common!");
-
-
-//        if (Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray()) != null) { //useless until we can use keys later on
-//            out.println(Arrays.toString(getEnemyData(type -> type.maxEnergy).toArray())); // prints all possible values for the type specified
-//        }
-
-        fight.attack(player, enemy, reader, status);
-        if (player.state() == FIGHT_WIN) {
-            out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");
-            player.setState(RESET);
-            return moveLogic();
-        }
-        return 0;
-    }
+interface GameStatus extends GameplayLogic { // this interface is WAY too important - needs to be split up
 
 
     static int startGame(Scanner reader, Players player) {
-        Actions sleep = Sleep::new, status = Status::new, eat = Eat::new, drink = Drink::new; // method references
         Quit quit = new Quit();
         Fight fight = new Fight();
-        int finalMoves = 0, movesLeft = STARTING_MOVES; //TODO make moves static and part of player class?
+        int finalMoves = 0, movesLeft = STARTING_MOVES;
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
             player.levelUpCheck(player);
             var choice = normalize(reader);
@@ -68,18 +37,18 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
             }
             switch (PossibleMoves.checkInput(choice)) {
                 case FIGHT -> // dont get a move for retreating
-                        movesLeft += fightLogic(fight, player, reader, status);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET
+                        movesLeft += GameplayLogic.fightLogic(fight, player, reader);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET
 
-                case SLEEP -> sleep.action(player);
-                case DRINK -> drink.action(player);
-                case EAT -> eat.action(player);
+                case SLEEP -> new Sleep(player).execute();
+                case DRINK -> new Drink(player).execute();
+                case EAT -> new Eat(player).execute();
                 case CONDITION -> {
-                    status.action(player);
+                    new Status(player).execute();
                     totalMoves--;
                     movesLeft--; // don't count towards the final score but still uses a move
                 }
                 case QUIT -> {
-                    quit.action(player, reader);
+                    quit.execute(player, reader);
                     totalMoves--; // dont count towards total moves
                 }
                 case null -> {
@@ -92,7 +61,8 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
                 //TODO: run the "status check" on a separate thread when main game loop is running
                 break;
             }
-            if(movesLeft - totalMoves != 0) UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move except the last one
+            if (movesLeft - totalMoves != 0)
+                UserInterface.showChoices(movesLeft, totalMoves); // show choices after every move except the last one
             finalMoves = totalMoves; // set it after every move for the quit
         }
         finalMoves++;       // count the last move before death
@@ -110,11 +80,16 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
         return totalMoves;
     }
 
-    static void retryGame(Scanner reader) throws Exception{ // move this somewhere else
+    static void retryGame(Scanner reader) { // move this somewhere else
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);
         if (ch.contains("y")) {
-            Life.main(); // TODO: care
+            try {
+                restartApplication();
+            } catch (IOException e) {
+                out.println("Runtime was not found, you'll have to reboot the game manually!");
+                System.exit(0);
+            }
         } else if (ch.contains("n")) {
             out.println("See ya!");
             reader.close();
@@ -125,5 +100,53 @@ interface GameStatus { // this interface is WAY too important - needs to be spli
             Colours.clear();
             retryGame(reader);
         }
+    }
+
+    /**
+     * Courtesy of Leo Lewis <a href="https://lewisleo.blogspot.com/2012/08/programmatically-restart-java.html">How to programmatically restart a Java application</a>
+     */
+    private static void restartApplication() throws IOException {
+        String javaExe = System.getProperty("java.home") + "\\bin\\java.exe";
+
+        List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+        List<String> childArgs = new java.util.ArrayList<>();
+
+        for (String arg : vmArguments) {
+            if (!arg.contains("-agentlib")) {
+                childArgs.add(arg);
+            }
+        }
+
+        String[] mainCommand = System.getProperty(SUN_JAVA_COMMAND).split(" ");
+        if (!mainCommand[0].endsWith(".jar")) {
+            out.println(ANSI_RED + "ERROR: "+ ANSI_RESET + "Please specify the main jar file. You're probably running this inside the IDE.\nTry again by running the jar.");
+            System.exit(0);
+        }
+
+        childArgs.add("-jar");
+        childArgs.add(new File(mainCommand[0]).getPath());
+
+        childArgs.addAll(Arrays.asList(mainCommand).subList(1, mainCommand.length));
+
+        out.println("Restarting with: [" + javaExe + ", " + String.join(" ", childArgs) + "]");
+
+        // On Windows, open a NEW console window so PowerShell doesn't steal stdin.
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            List<String> cmd = new ArrayList<>();
+            cmd.add("cmd.exe");
+            cmd.add("/c");
+            cmd.add("start");
+            cmd.add("\"\""); // empty window title (IMPORTANT), otherwise its treated as an executable
+            cmd.add(javaExe);
+            cmd.addAll(childArgs);
+            new ProcessBuilder(cmd).start();
+        } else {
+            List<String> cmd = new ArrayList<>();
+            cmd.add(javaExe);
+            cmd.addAll(childArgs);
+            new ProcessBuilder(cmd).inheritIO().start();
+        }
+
+        System.exit(0);
     }
 }
