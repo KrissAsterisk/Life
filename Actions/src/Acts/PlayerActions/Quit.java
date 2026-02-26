@@ -9,10 +9,10 @@ import java.util.Scanner;
 import static Shareables.Colours.AnsiCodes.ANSI_RED;
 import static java.lang.System.out;
 
-public final class Quit{
+public final class Quit {
 
 
-    public void execute(Players player, Scanner reader){
+    public void execute(Players player, Scanner reader) {
 
         out.println("You've chosen to quit the game. Are you sure? (Y/N)");
         String b = reader.nextLine();

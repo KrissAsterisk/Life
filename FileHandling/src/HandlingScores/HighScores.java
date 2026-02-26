@@ -23,10 +23,10 @@ public class HighScores {
     public HighScores(String name, int finalMoves) {
         this.name = name;
         this.finalMoves = finalMoves;
-        writeHighScoreToFile();
+        writeHighScoreToFile(); // I want this to be called everytime new scores are written; it just makes sense to have it here
     }
 
-    private void writeHighScoreToFile() {
+    private void writeHighScoreToFile() { //TODO: run on separate thread
         File highS;
         FileWriter scores;
         highS = new File(highScoresFilePath);
@@ -38,7 +38,7 @@ public class HighScores {
                     out.println("Failed to create file!");
                 }
             }
-            ;
+
             scores = new FileWriter(highS, true);
             scores.write(name + "'s highest number of moves achieved: " + finalMoves + "\n");
             scores.close();
@@ -133,6 +133,8 @@ public class HighScores {
         } catch (IOException e) {
             e.getCause();
             throw new RuntimeException(e);
+        } finally {
+            assert highS.setReadOnly();
         }
 
     } // make it so it reads from github or smth to get the up-to-date values of the actual HS list

@@ -7,7 +7,7 @@ import static Acts.Constants.MIN_ENERGY_COST;
 import static Shareables.RandomGenerator.rand;
 import static Shareables.RandomGenerator.randomize;
 
-public class EnergyUsage {
+public class EnergyUsage { //TODO: make into Wrapper?
 
     private Entities entity;
 

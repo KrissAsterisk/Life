@@ -38,13 +38,14 @@ public final class Fight implements Actions, FightLossMessages, Constants {
             switch (checkInput(normalize(reader))) {
                 case ATTACK -> {
                     if(new EnergyUsage(player).useEnergy() == DEAD) break LOOP; // do energy check before attack
-                    if (!getXinY(1, 50)) { // if 1 in 50, enemy dodges
+                    if (!getXinY(1, 50)) { // if 1 in 50, enemy dodges - higher rarity = more dodge chance
                         if (new Attack().execute(player, enemy) == DEAD) break LOOP; // if enemy dies, get out
                     } else {out.println("You... missed.");}
                 }
                 case DODGE -> {
                     if ((getXinY(player.level(), 10))) { // the higher the players level the higher the chance to dodge
                         out.println("You gracefully dodge and the " + enemy.getName() + " hits itself!");
+                        player.setState(DODGING);
                         if (new Attack().execute(enemy, enemy) == DEAD) break LOOP; // doesnt use energy
                     } else {
                         out.println("Uh Oh....");
@@ -63,7 +64,7 @@ public final class Fight implements Actions, FightLossMessages, Constants {
                     player.updateHealth(-5);
                 }
             }
-            if (enemyCanAct(enemy)) {
+            if (!player.state().equals(DODGING) && enemyCanAct(enemy)) {
                // new EnergyUsage(enemy).useEnergy();  - this lets the enemy still get a hit in if theyre out of energy if theyll die
                 if (!(getXinY(player.level(), 20))) { // 1 in 20 to dodge for player
                     if (player.state() == VULNERABLE) {

@@ -14,12 +14,13 @@ import static Shareables.RandomGenerator.randomize;
 public enum EnemyTypes {
     GOBLIN("Goblin", 0, 150, 50, 15, true, true, false),
     DWARF("Dwarf", 1, 50, 100, 25, false, true, false),
-    MONGREL("Mongrel", 2, 100, 1, 100, false, false, false),
+    MONGREL("Mongrel", 2, 100, 1, 100, false, false, true),
     ASSASSIN("Assassin", 3, 25, 200, 30, false, true, false),
     NEANDERTHAL("Neanderthal", 4, 200, 100, 25, false, true, false),
     WEREWOLF("Werewolf", 5, 250, 300, 10, false, false, true),
     ROBOT("Robot", 6, 400, 30, 5, false, true, true),
-    FLESHWALL("Flesh Wall", 7, 20, 0, 0, false, false, true);
+    FLESHWALL("Flesh Wall", 7, 20, 0, 0, false, false, true),
+    YOUR_EX("Your Ex", 7, 100, 100, 10, false, false, false);
 
     public final String namedEnemy;
     private final int position;
