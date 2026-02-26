@@ -6,6 +6,7 @@ Asr's highest number of moves achieved: 10
 ASr's highest number of moves achieved: 7
 ast's highest number of moves achieved: 7
 WATER's highest number of moves achieved: 7
+a's highest number of moves achieved: 7
 As's highest number of moves achieved: 6
 Ast's highest number of moves achieved: 3
 asr's highest number of moves achieved: 3

@@ -6,8 +6,10 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import static Shareables.Colours.AnsiCodes.*;
+import static Shareables.NormalizeStrings.*;
 import static Shareables.RandomGenerator.rand;
 import static Shareables.RandomGenerator.randomize;
+
 import static java.lang.System.out;
 
 // The point of this record is to make it clear that I do NOT want anything to change the default init values of a player
@@ -23,7 +25,7 @@ public record PlayerTemplate(String name, Scanner reader, double foodP, double w
     public static PlayerTemplate initPlayer(Scanner reader) {
 
         out.println("Player1, your name: ");
-        String name = NormalizeStrings.normedUserName(reader).orElse("");
+        String name = normedUserName(reader).orElse("");
 
         return (new PlayerTemplate(nameChange(reader, name).orElse(DEFAULT_NAME), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS, DEFAULT_XP, DEFAULT_DAMAGE, DEFAULT_STARTING_LEVEL, EntityState.ALIVE));
 
@@ -32,17 +34,17 @@ public record PlayerTemplate(String name, Scanner reader, double foodP, double w
     private static Optional<String> nameChange(Scanner reader, String name) {// makes me scream inside
         if (!name.matches("\\w+")) { // check for non-letters - conveniently also forbids the user from using empty space for their name IN GENERAL.
             out.println("Please choose another name: ");
-            return nameChange(reader, NormalizeStrings.normedUserName(reader).orElse(""));
+            return nameChange(reader, normedUserName(reader).orElse(""));
         }
             out.println("Are you sure " + name + " is your name?");
-        if (NormalizeStrings.normalize(reader).contains("y")) {
+        if (normalize(reader).contains("y")) {
             out.println(ANSI_RED + "Name locked in.\nGood Luck.");
             Colours.clear();
             return Optional.of(name);
         } else {
             out.println("Input your new name: ");
             Colours.clear();
-            name = NormalizeStrings.normedUserName(reader).orElse("");
+            name = normedUserName(reader).orElse("");
             return nameChange(reader, name);
         }
     }

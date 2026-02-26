@@ -8,8 +8,8 @@ import static Shareables.RandomGenerator.rand;
 import static Shareables.RandomGenerator.randomize;
 
 public class EnergyUsage {
-    @SuppressWarnings("all")
-    private Entities entity; // NOT FINAL!!
+
+    private Entities entity;
 
     public EnergyUsage(Entities entity) {
         this.entity = entity;

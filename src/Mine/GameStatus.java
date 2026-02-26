@@ -24,10 +24,22 @@ import static java.lang.System.*;
 
 interface GameStatus extends GameplayLogic { // this interface is WAY too important - needs to be split up
 
-
+    /**
+     * Starts the game loop and manages the player's actions, state, and progression
+     * throughout the game. The method tracks the number of moves made by the player
+     * and performs operations such as leveling up, executing player choices, and
+     * displaying warnings or prompts based on game conditions.
+     *
+     * @param reader the {@code Scanner} object used to receive the player's input
+     * @param player the {@code Players} object representing the player whose state and actions are controlled during the game
+     * @return the total number of moves made by the player before the game ends
+     */
     static int startGame(Scanner reader, Players player) {
-        Quit quit = new Quit();
-        Fight fight = new Fight();
+        var sleep = new Sleep(player);
+        var drink = new Drink(player);
+        var eat = new Eat(player);
+        var status = new Status(player);
+        var quit = new Quit();
         int finalMoves = 0, movesLeft = STARTING_MOVES;
         for (int totalMoves = 1; totalMoves <= movesLeft; totalMoves++) {
             player.levelUpCheck(player);
@@ -36,14 +48,14 @@ interface GameStatus extends GameplayLogic { // this interface is WAY too import
                 UserInterface.lowMovesWarning(movesLeft, totalMoves);
             }
             switch (PossibleMoves.checkInput(choice)) {
-                case FIGHT -> // dont get a move for retreating
-                        movesLeft += GameplayLogic.fightLogic(fight, player, reader);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET
+                case FIGHT ->
+                        movesLeft += GameplayLogic.fightLogic(player, reader);// the lambdas don't really do anything right now; I have no idea how to actually make them useful YET
 
-                case SLEEP -> new Sleep(player).execute();
-                case DRINK -> new Drink(player).execute();
-                case EAT -> new Eat(player).execute();
+                case SLEEP -> sleep.execute();
+                case DRINK -> drink.execute();
+                case EAT -> eat.execute();
                 case CONDITION -> {
-                    new Status(player).execute();
+                    status.execute();
                     totalMoves--;
                     movesLeft--; // don't count towards the final score but still uses a move
                 }
@@ -119,7 +131,7 @@ interface GameStatus extends GameplayLogic { // this interface is WAY too import
 
         String[] mainCommand = System.getProperty(SUN_JAVA_COMMAND).split(" ");
         if (!mainCommand[0].endsWith(".jar")) {
-            out.println(ANSI_RED + "ERROR: "+ ANSI_RESET + "Please specify the main jar file. You're probably running this inside the IDE.\nTry again by running the jar.");
+            out.println(ANSI_RED + "ERROR: " + ANSI_RESET + "Please specify the main jar file. You're probably running this inside the IDE.\nTry again by running the jar.");
             System.exit(0);
         }
 

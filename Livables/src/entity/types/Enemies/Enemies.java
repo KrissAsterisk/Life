@@ -58,16 +58,6 @@ public final class Enemies implements Entities {
         return energyP;
     }
 
-    public double food() {
-        return 0;
-    }
-
-    public double water() {
-        return 0;
-    }
-
-    public byte level() { return 0; } // TODO: could have some effects depending on rarity?
-
     public double health() {
         return healthP;
     }
@@ -76,11 +66,6 @@ public final class Enemies implements Entities {
         return entityState;
     }
 
-    public void update(double foodP, double waterP, double energyP, double healthP) {
-        this.healthP += healthP;
-        this.energyP += energyP;
-
-    }
     public void updateHealth(double healthP) {
         this.healthP += healthP;
 
@@ -93,10 +78,8 @@ public final class Enemies implements Entities {
         this.entityState = state;
     }
 
-    public float updateXP(float xp) { return 0;}
-
     public EntityState deathCheck() {
-        if (this.energyP < -10 || this.healthP <= 0) {
+        if (this.energyP < -5 || this.healthP <= 0) {
             this.entityState = EntityState.DEAD;
         } else {
             this.entityState = EntityState.ALIVE; // redundant but its ok

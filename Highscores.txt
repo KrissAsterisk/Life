@@ -88,3 +88,4 @@ Aserisk's highest number of moves achieved: 1
 yes's highest number of moves achieved: 1
 yes's highest number of moves achieved: 21
 asr's highest number of moves achieved: 2
+a's highest number of moves achieved: 7

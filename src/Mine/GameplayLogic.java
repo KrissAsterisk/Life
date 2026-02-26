@@ -3,6 +3,7 @@ package Mine;
 import Acts.Actions;
 import Acts.PlayerActions.Fight;
 import Shareables.Colours;
+import Shareables.EntityState;
 import Shareables.RandomGenerator;
 import entity.types.Enemies.Enemies;
 import entity.types.Players.Players;
@@ -10,21 +11,23 @@ import entity.types.Players.Players;
 import java.util.Scanner;
 
 import static Shareables.Colours.AnsiCodes.*;
-import static Shareables.EntityState.FIGHT_WIN;
-import static Shareables.EntityState.RESET;
+import static Shareables.EntityState.*;
+import static Shareables.RandomGenerator.rand;
+import static Shareables.RandomGenerator.randomize;
 import static entity.types.Enemies.EnemyTypes.*;
 import static java.lang.System.out;
 
 public interface GameplayLogic {
     private static int moveLogic() {
-        int addMoves = RandomGenerator.randomize(5, 15); // at least 5 moves
+        int addMoves = randomize(5, 15); // at least 5 moves
         ANSI_HIGH_INTENSITY.printCode();
         out.println("You have gained " + ANSI_PURPLE + addMoves + ANSI_RESET + " moves for destroying your foe in battle!");
         Colours.clear();
         return addMoves;
     }
 
-    static int fightLogic(Fight fight, Players player, Scanner reader) { // refactor this
+    static int fightLogic(Players player, Scanner reader) { // refactor this
+        var fight = new Fight();
         Enemies enemy; // declare enemy in bigger scope so it can be reassigned in the try catch block
         try {
             enemy = new Enemies(randomizeEncounter()); // returns an enemy type
@@ -38,6 +41,12 @@ public interface GameplayLogic {
             out.println("You've defeated the " + enemy.getName() + "!\nYou live for now...");
             player.setState(RESET);
             return moveLogic();
+        }
+        if(player.state() == COWARD){
+            player.setState(RESET);
+            var movesToLose = randomize(rand.nextInt(5), 10);
+            out.println("You've lost "+ movesToLose +" moves trying to get away!");
+            return -movesToLose;
         }
         return 0;
     }

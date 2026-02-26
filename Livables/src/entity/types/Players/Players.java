@@ -65,12 +65,20 @@ public final class Players implements Entities, Survivor, HasLevels {
 
     public EntityState deathCheck() {
         double meanWarning = ((food() + water() + energy() + health()) / 4); // purposefully bad
-        if (deathThreshold(food(), water(), energy(), health())) { // would be nice if it told the player why they died - more data to add do their gravestones!
+        if (deathThreshold(food(), water(), energy(), health())) {
             var smallestValue = DoubleStream.of(food(), water(), energy(), health()).min().getAsDouble(); // TODO: add messages pertinent to the cause of death, like health -> heart stopped beating
-            if (health() == smallestValue) {out.println("Cause of death: " + ANSI_RED + "Health(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");}
-            if (energy() == smallestValue) {out.println("Cause of death: " + ANSI_YELLOW + "Energy(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");}
-            if (water() == smallestValue) {out.println("Cause of death: " + ANSI_CYAN + "Water(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");}
-            if (food() == smallestValue) {out.println("Cause of death: " + ANSI_GREEN + "Food(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");}
+            if (health() == smallestValue) {
+                out.println("Cause of death: " + ANSI_RED + "Health(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");
+            }
+            if (energy() == smallestValue) {
+                out.println("Cause of death: " + ANSI_YELLOW + "Energy(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");
+            }
+            if (water() == smallestValue) {
+                out.println("Cause of death: " + ANSI_CYAN + "Water(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");
+            }
+            if (food() == smallestValue) {
+                out.println("Cause of death: " + ANSI_GREEN + "Food(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");
+            }
             Colours.clear();
             setState(EntityState.DEAD);
         } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless right now! // TODO: put all data in a Tree and pick the lowest one to show the player which is the lowest
@@ -87,7 +95,7 @@ public final class Players implements Entities, Survivor, HasLevels {
     /**
      * Checks if the stream of doubles contains any that are below PLAYER_DEATH_THRESHOLD (-10)
      */
-    public boolean deathThreshold(double ... v){ // im proud of this one
+    public boolean deathThreshold(double... v) { // im proud of this one
         var doubleStream = DoubleStream.of(v);
         var temp = doubleStream.filter(x -> x < PLAYER_DEATH_THRESHOLD)
                 .collect( // can prolly replace this with something more readable but its ok for now
@@ -103,7 +111,8 @@ public final class Players implements Entities, Survivor, HasLevels {
             player.updateXP(-LEVEL_UP_THRESHOLD);
             var dmgGained = player.updateDamage(randomize(rand.nextDouble(1), MAX_DAMAGE_GAIN));// at most 10 extra damage
             level++;
-            out.println("You've just leveled up and gained "+ ANSI_RED + dmgGained +" extra damage!");
+            out.println("You've just leveled up and gained " + ANSI_RED + dmgGained + ANSI_RESET + " extra damage!");
+            out.println("You're more confident you can dodge due to your " + ANSI_PURPLE + "experience" + ANSI_RESET + "!");
             Colours.clear();
         }
     }
@@ -116,7 +125,7 @@ public final class Players implements Entities, Survivor, HasLevels {
         return damage;
     }
 
-    public byte level(){
+    public byte level() {
         return level;
     }
 
