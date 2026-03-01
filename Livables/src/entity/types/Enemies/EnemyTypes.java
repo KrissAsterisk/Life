@@ -112,12 +112,8 @@ public enum EnemyTypes {
 //            }
 //        }
 
-    public Object[] getData() { //TODO: remake this
-        return new Object[]{namedEnemy, maxHealth, maxEnergy, minDamage};
-    }
-
     public static EnemyTypes randomizeEncounter() throws RuntimeException {
-        var randomVariable = randomize(0, EnemyTypes.values().length); // in this specific scenario, the inclusive triggers an IndexOutOfBoundsException! which is great - makes the default enemy more common (which is what I want)
+        var randomVariable = randomize(0, EnemyTypes.values().length); // in this specific scenario, the inclusive triggers an IndexOutOfBoundsException! which makes the default enemy more common (for learning purposes)
         for (var enemy : EnemyTypes.values()) {
             if (randomVariable == enemy.position) {
                 return enemy;

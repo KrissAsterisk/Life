@@ -1,14 +1,18 @@
 package entity.types.Enemies;
 
 
+import Shareables.Colours;
 import Shareables.EntityState;
 import entity.types.Entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+import static Shareables.EntityState.DEAD;
 import static Shareables.RandomGenerator.rand;
 import static Shareables.RandomGenerator.randomize;
+import static entity.types.Constants.*;
 import static java.lang.System.out;
 
 public final class Enemies implements Entities {
@@ -20,6 +24,7 @@ public final class Enemies implements Entities {
     private double damage;
     private String name;
 
+    Consumer<Enemies> printEnemyStatus = entity -> printHealth.andThen(printEnergy).accept(entity);
 //    public Enemies(String name, EntityState state, double healthP, double energyP, double damage){
 //        this.name = name;
 //        this.entityState = state;
@@ -28,18 +33,20 @@ public final class Enemies implements Entities {
 //        this.damage = damage;
 //    }
 
-    public void printEnemyName(String name) {
-        out.println("A new " + name + " appears!");
+    public void printEnemyName() {
+        out.println("A new " + getName() + " appears!");
     }
 
     public Enemies(EnemyTypes type) {
-        Object[] dataArray = type.getData();
-        this.name = dataArray[0].toString();
-        this.healthP = Double.parseDouble(dataArray[1].toString());
-        this.energyP = Double.parseDouble(dataArray[2].toString());
-        this.damage = randomize(rand.nextDouble(10), Double.parseDouble(dataArray[3].toString())); // randomizes enemy damage when ran & if mathrandom rolls 0, its minDamage will be used; this is kinda bad since well never really be able to know its data at runtime
+        this.name = type.namedEnemy;
+        this.healthP = type.maxHealth;
+        this.energyP = type.maxEnergy;
+        this.damage = randomize(rand.nextDouble(10), type.minDamage); // randomizes enemy damage when ran & if mathrandom rolls 0, its minDamage will be used; this is kinda bad since well never really be able to know its data at runtime
         this.entityState = EntityState.ALIVE;
-        printEnemyName(name);
+    }
+
+    public boolean canAct() { // idea is so that the more energy an enemy has, the more likely they are to move
+        return ((!(state() == DEAD)) && Math.random() < (energy() / (energy() + MIN_ENERGY_COST))) | energy() >= IGNORE_ENERGY_RESTRICTIONS;
     }
 
     public double damage() {
@@ -79,11 +86,16 @@ public final class Enemies implements Entities {
     }
 
     public EntityState deathCheck() {
-        if (this.energyP < -5 || this.healthP <= 0) {
+        if (this.energyP < -1 || this.healthP <= 0) {
             this.entityState = EntityState.DEAD;
         } else {
             this.entityState = EntityState.ALIVE; // redundant but its ok
         }
         return this.entityState;
+    }
+
+    public void printStatus(){
+        printEnemyStatus.accept(this);
+        Colours.clear();
     }
 }

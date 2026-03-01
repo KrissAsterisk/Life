@@ -4,7 +4,7 @@ import entity.types.Enemies.Enemies;
 import Shareables.EntityState;
 import entity.types.Players.Players;
 
-public sealed interface Entities permits Players, Enemies, HasLevels, Survivor {
+public sealed interface Entities permits Enemies, HasLevels, Players, Survivor {
     String getName();
 
     double energy();
@@ -18,5 +18,6 @@ public sealed interface Entities permits Players, Enemies, HasLevels, Survivor {
     void updateEnergy(double energyP);
     void setState(EntityState state);
 
+    void printStatus();
 
 }

@@ -5,3 +5,4 @@ yes's highest number of moves achieved: 3
 y's highest number of moves achieved: 3
 yesd's highest number of moves achieved: 2
 Ast's highest number of moves achieved: 1
+asty's highest number of moves achieved: 1

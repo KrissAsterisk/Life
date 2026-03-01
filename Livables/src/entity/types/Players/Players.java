@@ -8,6 +8,7 @@ import entity.types.Survivor;
 
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 import java.util.stream.DoubleStream;
 
 import static Shareables.RandomGenerator.rand;
@@ -25,6 +26,9 @@ public final class Players implements Entities, Survivor, HasLevels {
     private double damage; // uses xp to increase maxDmg
     private float xp;
     private byte level;
+
+    Consumer<Players> printPlayerStatus = entity -> printLevel.andThen(printHealth).andThen(printEnergy).andThen(printWater).andThen(printFood).accept(entity);
+
 
     public Players(PlayerTemplate playerTemplate) {
         this.entityState = playerTemplate.currentState();
@@ -81,12 +85,10 @@ public final class Players implements Entities, Survivor, HasLevels {
             }
             Colours.clear();
             setState(EntityState.DEAD);
-        } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless right now! // TODO: put all data in a Tree and pick the lowest one to show the player which is the lowest
+        } else if (meanWarning < 50.00 && meanWarning > -10.00) { // intentionally useless right now! //
             out.printf("%n%s%sWatch it!%s Your state is in critical condition!\nYou will lose the game if one of your points go below -10!%n",
                     ANSI_RED, ANSI_HIGH_INTENSITY, ANSI_RESET);
             Colours.clear();
-
-            setState(EntityState.ALIVE); // redundant but its ok
         }
         return state();
     }
@@ -96,14 +98,7 @@ public final class Players implements Entities, Survivor, HasLevels {
      * Checks if the stream of doubles contains any that are below PLAYER_DEATH_THRESHOLD (-10)
      */
     public boolean deathThreshold(double... v) { // im proud of this one
-        var doubleStream = DoubleStream.of(v);
-        var temp = doubleStream.filter(x -> x < PLAYER_DEATH_THRESHOLD)
-                .collect( // can prolly replace this with something more readable but its ok for now
-                        ArrayList::new,
-                        ArrayList::add,
-                        ArrayList::addAll
-                );
-        return !temp.isEmpty();
+        return DoubleStream.of(v).anyMatch(x -> x < PLAYER_DEATH_THRESHOLD);
     }
 
     public void levelUpCheck(Players player) {
@@ -155,6 +150,11 @@ public final class Players implements Entities, Survivor, HasLevels {
 
     public float xp() {
         return xp;
+    }
+
+    public void printStatus(){
+        printPlayerStatus.accept(this);
+        Colours.clear();
     }
 
 }

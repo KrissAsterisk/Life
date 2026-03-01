@@ -2,6 +2,7 @@ package entity.types.Players;
 
 import Shareables.*;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -12,7 +13,9 @@ import static Shareables.RandomGenerator.randomize;
 
 import static java.lang.System.out;
 
+
 // The point of this record is to make it clear that I do NOT want anything to change the default init values of a player
+// at some point maybe take the reader out of the record class to serialize
 public record PlayerTemplate(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP, float xp, double damage, byte level,
                              EntityState currentState) {
 

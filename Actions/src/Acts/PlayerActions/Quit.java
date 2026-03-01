@@ -26,7 +26,7 @@ public final class Quit {
             ANSI_RED.printCode();
             out.println("Please input only 1 character. (Y/N)");
             Colours.clear();
-            execute(player, reader); // come back to this method
+            execute(player, reader); // recursive
         }
     }
 }

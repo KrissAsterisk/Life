@@ -3,10 +3,7 @@ package HandlingScores;
 import Shareables.Colours.AnsiCodes;
 
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.*;
 
 import static HandlingScores.Constants.*;
@@ -26,7 +23,7 @@ public class HighScores {
         writeHighScoreToFile(); // I want this to be called everytime new scores are written; it just makes sense to have it here
     }
 
-    private void writeHighScoreToFile() { //TODO: run on separate thread
+    private void writeHighScoreToFile() {
         File highS;
         FileWriter scores;
         highS = new File(highScoresFilePath);
@@ -45,7 +42,7 @@ public class HighScores {
             out.println("Wrote your high score into a local file!");
 
         } catch (IOException unnamedVar) {
-
+            out.println("Something went wrong during file writing.");
         }
 
         readHighScoresFromFile(highS);
@@ -71,7 +68,7 @@ public class HighScores {
                         ArrayList::new,
                         ArrayList::add,
                         ArrayList::addAll
-                ); // THIS is how REAL PEOPLE code
+                );
 
 
         Set<String> sorted = new LinkedHashSet<>(extractedData); // make sure names are unique - Case Sensitive on purpose!
@@ -134,7 +131,7 @@ public class HighScores {
             e.getCause();
             throw new RuntimeException(e);
         } finally {
-            assert highS.setReadOnly();
+            assert highS.setReadOnly(); // this is really risky
         }
 
     } // make it so it reads from github or smth to get the up-to-date values of the actual HS list

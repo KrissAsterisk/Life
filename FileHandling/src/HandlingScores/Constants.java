@@ -1,6 +1,8 @@
 package HandlingScores;
 
-public interface Constants {
+public final class Constants {
+    Constants(){}
+
     final static String highScoresFilePath = "Highscores.txt";
-    String sortedHighScoresPath = "Sorted.txt";
+    final static String sortedHighScoresPath = "Sorted.txt";
 }
