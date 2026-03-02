@@ -39,7 +39,7 @@ public final class GameEngine {
             }
             switch (PossibleMoves.checkInput(choice)) {
                 case FIGHT ->
-                        movesLeft += BattleManager.startFight(player, reader);
+                        movesLeft += Manager.startFight(player, reader);
 
                 case SLEEP -> sleep.execute();
                 case DRINK -> drink.execute();

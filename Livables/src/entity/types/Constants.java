@@ -20,6 +20,6 @@ public final class Constants { // namespace of constants
     public final static Consumer<Entities> printEnergy = entity -> out.printf("%sEP: %f%n", ANSI_YELLOW, entity.energy());
     public final static Consumer<Players> printWater = entity -> out.printf("%sWP: %f%n", ANSI_CYAN, entity.water());
     public final static Consumer<Players> printFood = entity -> out.printf("%sFP: %f%n", ANSI_GREEN, entity.food());
-    public final static Consumer<Players> printLevel = entity -> out.printf("%sLevel: %d%n", ANSI_PURPLE, entity.level());
+    public final static Consumer<Players> printLevel = entity -> out.printf("%sLevel: %d, XP: %f%n", ANSI_PURPLE, entity.level(), entity.xp());
 
 }

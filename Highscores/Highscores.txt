@@ -145,3 +145,16 @@ ast's highest number of moves achieved: 2
 as's highest number of moves achieved: 2
 k's highest number of moves achieved: 1
 As's highest number of moves achieved: 2
+as's highest number of moves achieved: 4
+as's highest number of moves achieved: 1
+as's highest number of moves achieved: 2
+Kra's highest number of moves achieved: 3
+yes's highest number of moves achieved: 2
+as's highest number of moves achieved: 1
+as's highest number of moves achieved: 0
+As's highest number of moves achieved: 2
+as's highest number of moves achieved: 2
+as's highest number of moves achieved: 1
+as's highest number of moves achieved: 3
+as's highest number of moves achieved: 3
+s's highest number of moves achieved: 4

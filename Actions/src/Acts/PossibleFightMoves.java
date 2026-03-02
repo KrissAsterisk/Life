@@ -1,7 +1,7 @@
 package Acts;
 
 public enum PossibleFightMoves {
-    ATTACK(1, "attack"),
+    ATTACK(1, "explore"),
     DODGE(2, "dodge"),
     FLEE(3, "flee");
 

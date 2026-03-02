@@ -2,12 +2,12 @@ package Acts.Consumption;
 
 import entity.types.Entities;
 
-import static Acts.Constants.cost;
+import static Acts.Constants.COST;
 
 public class EnergyUsage {
 
     public Entities useEnergy(Entities entity) {
-        entity.updateEnergy(-cost);
+        entity.updateEnergy(-COST);
         return entity;
     }
 }

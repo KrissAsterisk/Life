@@ -6,7 +6,7 @@ import static java.lang.System.out;
 public final class UserInterface {
     public static void showChoices(int movesLeft, int totalMoves) {
         out.printf(ANSI_LOW_INTENSITY.toString() + ANSI_BLUE + "\nIt's time to choose:" + ANSI_RESET +
-                "\n1 - Fight\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
+                "\n1 - Explore\n2 - Sleep\n3 - Drink\n4 - Eat\n5 - Condition\n6 - Quit\n%d: Moves left\n", movesLeft - totalMoves);
     }
 
     static void lowMovesWarning() { // this is a work of art
