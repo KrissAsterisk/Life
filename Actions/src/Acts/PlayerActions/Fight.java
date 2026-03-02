@@ -26,8 +26,8 @@ public final class Fight implements Actions {
 //            new Goblin(); // this belongs in a museum
 //        }
         var initiateBattle = new Attack();
-        var playerEnergy = new EnergyUsage().useEnergy(player);
-        var enemyEnergy = new EnergyUsage().useEnergy(enemy);
+        var playerEnergy = new EnergyUsage();
+        var enemyEnergy = new EnergyUsage();
         player.setState(RESET);// reset vulnerable
 
         LOOP:
@@ -37,7 +37,7 @@ public final class Fight implements Actions {
             out.println("1 - Attack\t2 - Dodge\t3 - Flee");
             switch (checkInput(normalize(reader))) {
                 case ATTACK -> {
-                    if(playerEnergy.deathCheck() == DEAD) break LOOP; // do energy check before attack
+                    if(playerEnergy.useEnergy(player).deathCheck() == DEAD) break LOOP; // do energy check before attack
                     if (!getXinY(1, 50)) { // if 1 in 50, enemy dodges - higher rarity = more dodge chance TBD
                         if (initiateBattle.execute(player, enemy).deathCheck() == DEAD) break LOOP; // if enemy dies, get out
                     } else out.println("You... missed.");
@@ -74,7 +74,7 @@ public final class Fight implements Actions {
                     }
                     execute(); // print funny loss msg (i know this is awful)
                 } else out.println("You managed to dodge in the nick of time!");
-                enemyEnergy.deathCheck();
+                enemyEnergy.useEnergy(enemy).deathCheck();
             }
 
         } while (player.state() != DEAD & enemy.state() != DEAD);

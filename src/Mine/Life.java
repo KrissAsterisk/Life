@@ -1,4 +1,7 @@
 package Mine;
+import Mine.Engine.GameEngine;
+import Mine.Engine.GameSession;
+import Mine.Engine.UserInterface;
 import entity.types.Players.PlayerTemplate;
 import entity.types.Players.Players;
 import Shareables.Colours;
@@ -6,11 +9,9 @@ import Shareables.RandomGenerator;
 import HandlingScores.HighScores;
 
 
-
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
-
 
 import java.util.Locale;
 import java.util.Scanner;
@@ -22,14 +23,16 @@ import static java.lang.System.*;
 
 
 public final class Life {
-    public static void main() {
+    public static void main() throws IOException, ClassNotFoundException {
         Colours.clear(); // initialize enum
         out.print(ANSI_CLEAR);
         out.flush();
-        System.out.println(Locale.getDefault());
+        out.println(Locale.getDefault());
         var reader = new Scanner(in);
-        var player = new Players(PlayerTemplate.initPlayer(reader));
-        out.println("Every execute costs a move. Use them wisely!");
+        var initPlayer = PlayerTemplate.initPlayer(reader);
+        var player = new Players(initPlayer);
+        player.welcomePlayer();
+        out.println("Every action costs a move. Use them wisely!");
         UserInterface.showChoices(STARTING_MOVES, 0);
         var gameStartTime = Instant.now();
         out.println("Current seed: " + RandomGenerator.RANDOM_SEED);
@@ -39,7 +42,10 @@ public final class Life {
         var gameOverTime = Instant.now();
         out.println("You lasted: " + ANSI_HIGH_INTENSITY + (ChronoUnit.MINUTES.between(gameStartTime, gameOverTime)) + " minutes and " + (ChronoUnit.SECONDS.between(gameStartTime, gameOverTime)) + " seconds.");
         Colours.clear();
-        new HighScores(player.getName(), totalMoves);
+        var saveScores = new HighScores(player.getName(), totalMoves);
+        saveScores.writeHighScoreToFile();
+        saveScores.saveObject(player, initPlayer);
+        out.println(saveScores.readObject()); // TODO: use this to restore saves
         GameSession.retryGame(reader);
 
     }

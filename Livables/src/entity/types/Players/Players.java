@@ -6,6 +6,7 @@ import entity.types.Entities;
 import entity.types.HasLevels;
 import entity.types.Survivor;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 import java.util.stream.DoubleStream;
 
@@ -16,16 +17,16 @@ import static Shareables.Colours.AnsiCodes.*;
 import static java.lang.System.out;
 
 
-public final class Players implements Entities, Survivor, HasLevels {
+public final class Players implements Entities, Survivor, HasLevels, Serializable {
 
-    private double foodP, waterP, energyP, healthP;
-    private EntityState entityState;
-    private final String pName;
-    private double damage; // uses xp to increase maxDmg
-    private float xp;
-    private byte level;
+    private transient double foodP, waterP, energyP, healthP;
+    private transient EntityState entityState;
+    private transient final String pName;
+    private transient double damage; // uses xp to increase maxDmg
+    private transient float xp;
+    private transient byte level;
 
-    Consumer<Players> printPlayerStatus = entity -> printLevel.andThen(printHealth).andThen(printEnergy).andThen(printWater).andThen(printFood).accept(entity);
+    private static final Consumer<Players> printPlayerStatus = entity -> printLevel.andThen(printHealth).andThen(printEnergy).andThen(printWater).andThen(printFood).accept(entity);
 
 
     public Players(PlayerTemplate playerTemplate) {
@@ -38,6 +39,11 @@ public final class Players implements Entities, Survivor, HasLevels {
         this.healthP = playerTemplate.healthP();
         this.xp = playerTemplate.xp();
         this.level = playerTemplate.level();
+    }
+
+    public void welcomePlayer(){
+        out.println(ANSI_GREEN + "Welcome to the game, " + ANSI_YELLOW + this.pName + ANSI_GREEN + "!"); // welcome the player anytime they "sign in"
+        Colours.clear(); // less boilerplate yuppie
     }
 
     public void update(double foodP, double waterP, double energyP, double healthP) {
@@ -150,7 +156,7 @@ public final class Players implements Entities, Survivor, HasLevels {
         return xp;
     }
 
-    public void printStatus(){
+    public void printStatus() {
         printPlayerStatus.accept(this);
         Colours.clear();
     }

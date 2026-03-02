@@ -1,10 +1,10 @@
 package entity.types.Enemies;
 
-
 import Shareables.Colours;
 import Shareables.EntityState;
 import entity.types.Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,16 +15,16 @@ import static Shareables.RandomGenerator.randomize;
 import static entity.types.Constants.*;
 import static java.lang.System.out;
 
-public final class Enemies implements Entities {
+public final class Enemies implements Entities, Serializable {
 
-    private EntityState entityState;
-    private double healthP;
-    private double energyP;
+    private transient EntityState entityState;
+    private transient double healthP;
+    private transient double energyP;
 
-    private double damage;
-    private String name;
+    private final transient double damage;
+    private final transient String name;
 
-    Consumer<Enemies> printEnemyStatus = entity -> printHealth.andThen(printEnergy).accept(entity);
+    private transient final Consumer<Enemies> printEnemyStatus = entity -> printHealth.andThen(printEnergy).accept(entity);
 //    public Enemies(String name, EntityState state, double healthP, double energyP, double damage){
 //        this.name = name;
 //        this.entityState = state;

@@ -1,6 +1,7 @@
-package Mine;
+package Mine.Engine;
 
 import Acts.PlayerActions.*;
+import Mine.PossibleMoves;
 import Shareables.Colours;
 import entity.types.Players.Players;
 

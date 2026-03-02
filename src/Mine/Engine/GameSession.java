@@ -1,4 +1,4 @@
-package Mine;
+package Mine.Engine;
 
 import Shareables.Colours;
 import Shareables.NormalizeStrings;

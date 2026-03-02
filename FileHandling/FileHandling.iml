@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Shared" />
+    <orderEntry type="module" module-name="Livables" />
   </component>
 </module>

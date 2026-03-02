@@ -1,9 +1,9 @@
 package entity.types.Enemies;
 
-
 import entity.types.CheckTrait;
 import entity.types.GetNumber;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static Shareables.RandomGenerator.randomize;
@@ -11,10 +11,10 @@ import static Shareables.RandomGenerator.randomize;
 /**
  * Holds all possible types of enemies and their specific parameters
  */
-public enum EnemyTypes {
+public enum EnemyTypes implements Serializable {
     GOBLIN("Goblin", 0, 150, 50, 15, true, true, false),
     DWARF("Dwarf", 1, 50, 100, 25, false, true, false),
-    MONGREL("Mongrel", 2, 100, 1, 100, false, false, true),
+    MONGREL("Mongrel", 2, 100, 2, 100, false, false, true),
     ASSASSIN("Assassin", 3, 25, 200, 30, false, true, false),
     NEANDERTHAL("Neanderthal", 4, 200, 100, 25, false, true, false),
     WEREWOLF("Werewolf", 5, 250, 300, 10, false, false, true),

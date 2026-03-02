@@ -7,10 +7,11 @@ import java.util.function.ToDoubleBiFunction;
 
 public final class RandomGenerator {
     private RandomGenerator(){}
-    public static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1; // 1 random inst per session is ok, but this does let you "retryGame" and predict the seed to absolute accuracy
+    public static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1;
+    //public static final long RANDOM_SEED = 81033; mongrel test
     public static final Random rand = new Random(RANDOM_SEED);
 
-    static final Supplier<Double> roll01Double = Math::random;
+    private static final Supplier<Double> roll01Double = Math::random;
 
     /**
      * Generates a random integer between the specified origin (inclusive) and bound (inclusive),

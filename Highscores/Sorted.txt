@@ -17,6 +17,7 @@ asr's highest number of moves achieved: 3
 AS's highest number of moves achieved: 3
 Astteris's highest number of moves achieved: 3
 Aster's highest number of moves achieved: 2
+ye's highest number of moves achieved: 2
 null's highest number of moves achieved: 1
 Asrter's highest number of moves achieved: 1
 aster's highest number of moves achieved: 1
@@ -29,3 +30,4 @@ Asrt's highest number of moves achieved: 1
 ay's highest number of moves achieved: 1
 Aserisk's highest number of moves achieved: 1
 asty's highest number of moves achieved: 1
+k's highest number of moves achieved: 1

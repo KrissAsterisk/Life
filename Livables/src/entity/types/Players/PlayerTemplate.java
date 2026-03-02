@@ -16,21 +16,12 @@ import static java.lang.System.out;
 
 // The point of this record is to make it clear that I do NOT want anything to change the default init values of a player
 // at some point maybe take the reader out of the record class to serialize
-public record PlayerTemplate(String name, Scanner reader, double foodP, double waterP, double energyP, double healthP, float xp, double damage, byte level,
-                             EntityState currentState) {
-
-    public PlayerTemplate { // compact constructor!!
-        out.println(ANSI_GREEN + "Welcome to the game, " + ANSI_YELLOW + name + ANSI_GREEN + "!"); // welcome the player anytime they "sign in"
-        Colours.clear(); // less boilerplate yuppie
-
-    }
+public record PlayerTemplate(String name, double foodP, double waterP, double energyP, double healthP, float xp, double damage, byte level,
+                             EntityState currentState) implements Serializable {
 
     public static PlayerTemplate initPlayer(Scanner reader) {
-
         out.println("Player1, your name: ");
-        String name = normedUserName(reader).orElse("");
-
-        return (new PlayerTemplate(nameChange(reader, name).orElse(DEFAULT_NAME), reader, DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS, DEFAULT_XP, DEFAULT_DAMAGE, DEFAULT_STARTING_LEVEL, EntityState.ALIVE));
+        return (new PlayerTemplate(nameChange(reader, normedUserName(reader).orElse("")).orElse(DEFAULT_NAME), DEFAULT_FOOD_POINTS, DEFAULT_WATER_POINTS, DEFAULT_ENERGY_POINTS, DEFAULT_HEALTH_POINTS, DEFAULT_XP, DEFAULT_DAMAGE, DEFAULT_STARTING_LEVEL, EntityState.ALIVE));
 
     }
     // im never using recursive functions like this ever again

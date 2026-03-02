@@ -4,6 +4,8 @@ import Shareables.Colours.AnsiCodes;
 
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 import static HandlingScores.Constants.*;
@@ -15,28 +17,33 @@ public class HighScores {
 
     private final String name;
     private final int finalMoves;
-
+    private final File highScoresFile = new File(highScoresFilePath);
+    private final File serializedObjFile = new File(serializedObjectsPath);
+    private final Path scoresDirPath  = Path.of(Constants.scoresDirPath);
 
     public HighScores(String name, int finalMoves) {
         this.name = name;
         this.finalMoves = finalMoves;
-        writeHighScoreToFile(); // I want this to be called everytime new scores are written; it just makes sense to have it here
     }
 
-    private void writeHighScoreToFile() {
-        File highS;
+    public void writeHighScoreToFile() {
         FileWriter scores;
-        highS = new File(highScoresFilePath);
-        assert highS.setWritable(true);
+        assert highScoresFile.setWritable(true);
+
+        try{
+            Files.createDirectory(scoresDirPath);
+        } catch (IOException e){
+            if(!scoresDirPath.toFile().exists()) out.println("ERROR: Could not create directory for Highscores!");
+        }
 
         try {
-            if (!highS.exists()) {
-                if (!highS.createNewFile()) {
+            if (!highScoresFile.exists()) {
+                if (!highScoresFile.createNewFile()) {
                     out.println("Failed to create file!");
                 }
             }
 
-            scores = new FileWriter(highS, true);
+            scores = new FileWriter(highScoresFile, true);
             scores.write(name + "'s highest number of moves achieved: " + finalMoves + "\n");
             scores.close();
             out.println("Wrote your high score into a local file!");
@@ -45,7 +52,7 @@ public class HighScores {
             out.println("Something went wrong during file writing.");
         }
 
-        readHighScoresFromFile(highS);
+        readHighScoresFromFile(highScoresFile);
 
     }
 
@@ -131,8 +138,27 @@ public class HighScores {
             e.getCause();
             throw new RuntimeException(e);
         } finally {
-            assert highS.setReadOnly(); // this is really risky
+            assert highS.setReadOnly(); // this is really risky and also ignored so its ok
         }
-
     } // make it so it reads from github or smth to get the up-to-date values of the actual HS list
+
+
+    public void saveObject(Object... v) throws IOException { // this is not how you serialize im just testing for now
+        try(var out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(serializedObjFile)))){
+            for(var obj : v) out.writeObject(obj);
+        }
+    }
+
+    public List<Object> readObject() throws IOException, ClassNotFoundException {
+        List<Object> test = new ArrayList<>();
+        try(var in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(serializedObjFile)))){
+            while(true){
+                var object = in.readObject();
+                test.add(object);
+            }
+        } catch(EOFException e){
+            // end of file
+        }
+        return test;
+    }
 }
