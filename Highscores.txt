@@ -112,3 +112,4 @@ ASt's highest number of moves achieved: 2
 Ast's highest number of moves achieved: 3
 Astteris's highest number of moves achieved: 3
 yes's highest number of moves achieved: 1
+Ast's highest number of moves achieved: 2

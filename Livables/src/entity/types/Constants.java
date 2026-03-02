@@ -5,8 +5,6 @@ import entity.types.Players.Players;
 import java.util.function.Consumer;
 
 import static Shareables.Colours.AnsiCodes.*;
-import static Shareables.Colours.AnsiCodes.ANSI_GREEN;
-import static Shareables.Colours.AnsiCodes.ANSI_PURPLE;
 import static java.lang.System.out;
 
 public final class Constants { // namespace of constants

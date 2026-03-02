@@ -1,12 +1,10 @@
 package Acts.PlayerActions;
 
 import Acts.Actions;
-import Acts.Constants;
 import Acts.GeneralActions.Attack;
 import Acts.Consumption.EnergyUsage;
 import Acts.FightLossMessages;
 import entity.types.Enemies.Enemies;
-import entity.types.Entities;
 import Shareables.Colours;
 import entity.types.Players.Players;
 

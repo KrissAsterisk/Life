@@ -5,11 +5,12 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleBiFunction;
 
-public interface RandomGenerator {
-    static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1; // 1 random inst per session is ok, but this does let you "retryGame" and predict the seed to absolute accuracy
+public final class RandomGenerator {
+    private RandomGenerator(){}
+    public static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1; // 1 random inst per session is ok, but this does let you "retryGame" and predict the seed to absolute accuracy
     public static final Random rand = new Random(RANDOM_SEED);
 
-    Supplier<Double> roll01Double = Math::random;
+    static final Supplier<Double> roll01Double = Math::random;
 
     /**
      * Generates a random integer between the specified origin (inclusive) and bound (inclusive),

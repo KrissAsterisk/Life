@@ -2,9 +2,11 @@ package Acts;
 
 import java.util.*;
 
-public interface FightLossMessages {
+public final class FightLossMessages {
+    private FightLossMessages() {
+    }
 
-    static String[] getStrings() {
+    public static String[] getStrings() {
         ArrayList<String> loss = new ArrayList<>(); //TODO API calls to ai for sentence generation or YAML file that stores all possible values
         loss.add(" unfortunately you were outnumbered and barely managed to get away . ");
         loss.add(" you tried to fight a dragon barehanded and got your teeth knocked out . ");

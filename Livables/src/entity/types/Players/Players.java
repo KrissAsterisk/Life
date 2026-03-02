@@ -6,8 +6,6 @@ import entity.types.Entities;
 import entity.types.HasLevels;
 import entity.types.Survivor;
 
-
-import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.DoubleStream;
 
@@ -69,7 +67,7 @@ public final class Players implements Entities, Survivor, HasLevels {
 
     public EntityState deathCheck() {
         double meanWarning = ((food() + water() + energy() + health()) / 4); // purposefully bad
-        if (deathThreshold(food(), water(), energy(), health())) {
+        if (deathThreshold(food(), water(), energy(), health())) { // TODO: have the cause be an interchangeable var
             var smallestValue = DoubleStream.of(food(), water(), energy(), health()).min().getAsDouble(); // TODO: add messages pertinent to the cause of death, like health -> heart stopped beating
             if (health() == smallestValue) {
                 out.println("Cause of death: " + ANSI_RED + "Health(" + ANSI_HIGH_INTENSITY + smallestValue + ANSI_RESET + ")");

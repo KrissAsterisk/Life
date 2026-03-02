@@ -19,8 +19,8 @@ import static java.lang.System.out;
  * It handles enemy generation, battle interactions, and the resulting outcomes (e.g., win, retreat, or loss).
  * The class operates primarily through interaction with a {@link Players} object and user input via a {@link Scanner}.
  */
-public class BattleManager {
-
+public final class BattleManager {
+    private BattleManager(){}
     public static int startFight(Players player, Scanner reader) {
         var fight = new Fight();
         Enemies enemy;

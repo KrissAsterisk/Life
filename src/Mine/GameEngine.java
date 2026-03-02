@@ -22,8 +22,8 @@ import static java.lang.System.out;
  * player inputs, handles the possible actions based on their choice, checks player states, and updates
  * player progress accordingly.
  */
-public class GameEngine {
-
+public final class GameEngine {
+    private GameEngine(){}
     public static int start(Scanner reader, Players player) {
         var sleep = new Sleep(player);  // id rather have these methods defined in survivor, so i can call player.eat(); instead of eat player
         var drink = new Drink(player);
@@ -34,7 +34,7 @@ public class GameEngine {
             player.levelUpCheck(player);
             var choice = normalize(reader);
             if (movesLeft - totalMoves == 5) {
-                UserInterface.lowMovesWarning(movesLeft, totalMoves);
+                UserInterface.lowMovesWarning();
             }
             switch (PossibleMoves.checkInput(choice)) {
                 case FIGHT ->

@@ -19,8 +19,8 @@ import static java.lang.System.out;
  * Represents a game session where users can choose to retry or exit the game.
  * Provides functionality to handle user input for retry prompts and restarting the application.
  */
-public class GameSession {
-
+public final class GameSession {
+    private GameSession(){}
     public static void retryGame(Scanner reader) {
         out.println("Would you like to try again?");
         String ch = NormalizeStrings.normalize(reader);

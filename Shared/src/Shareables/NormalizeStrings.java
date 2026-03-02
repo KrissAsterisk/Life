@@ -7,8 +7,8 @@ import java.util.function.Predicate;
 
 import static Shareables.Colours.AnsiCodes.*;
 
-public interface NormalizeStrings {
-
+public final class NormalizeStrings {
+    private NormalizeStrings(){}
 
     /**
      * Normalize user input to lowercase no blanks for user input
