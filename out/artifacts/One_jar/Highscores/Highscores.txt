@@ -68,3 +68,4 @@ Kra's highest number of moves achieved: 1
 Ast's highest number of moves achieved: 1
 Ast's highest number of moves achieved: 1
 asty's highest number of moves achieved: 1
+Kra's highest number of moves achieved: 5

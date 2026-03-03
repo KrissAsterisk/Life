@@ -158,3 +158,4 @@ as's highest number of moves achieved: 1
 as's highest number of moves achieved: 3
 as's highest number of moves achieved: 3
 s's highest number of moves achieved: 4
+as's highest number of moves achieved: 11

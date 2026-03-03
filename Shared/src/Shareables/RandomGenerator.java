@@ -8,7 +8,7 @@ import java.util.function.ToDoubleBiFunction;
 public final class RandomGenerator {
     private RandomGenerator(){}
     public static final long RANDOM_SEED = (long) (Math.random() * 999999) + 1;
-    //public static final long RANDOM_SEED = 81033; mongrel test
+    //public static final long RANDOM_SEED = 81033;
     public static final Random rand = new Random(RANDOM_SEED);
 
     private static final Supplier<Double> roll01Double = Math::random;

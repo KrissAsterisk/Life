@@ -23,8 +23,7 @@ import static java.lang.System.out;
 public final class Manager {
     private Manager(){}
     public static int startFight(Players player, Scanner reader) {
-        var explore = new Explore();
-        explore.explore(player, reader);
+        new Explore().explore(player, reader);
         if (player.state() == FIGHT_WIN) {
             player.setState(RESET);
             return calculateMovesGained();
